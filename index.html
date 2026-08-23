@@ -295,9 +295,14 @@ const EX={
  calf_seat:{n:"Seated Calf Raise",m:"Soleus",i:10,cue:"Knees bent 90°. Slow and full range. High reps — soleus needs volume.",alt:"Leg press calf raise (knees bent)"},
  hang_raise:{n:"Hanging Leg Raise",m:"Abs",i:5,cue:"Curl the pelvis up, don't just swing the legs. Knees bent is fine to start.",alt:"Captain's chair raise"},
  cable_crunch:{n:"Cable Crunch",m:"Abs",i:10,cue:"Kneel, rope at your head. Crunch the ribs to the pelvis. Hips stay still.",alt:"Machine crunch / Weighted decline crunch"},
- ab_wheel:{n:"Ab Wheel Rollout",m:"Abs",i:0,cue:"Ribs down, glutes squeezed. Only roll as far as you can hold a flat back.",alt:"Long-lever plank / Cable crunch"},
+ ab_wheel:{n:"Ab Wheel Rollout",m:"Abs",i:5,cue:"Ribs down, glutes squeezed. Only roll as far as you can hold a flat back.",alt:"Long-lever plank / Cable crunch"},
  pallof:{n:"Cable Woodchop",m:"Obliques / core",i:5,cue:"Rotate through the torso, arms stay straight. Controlled both directions.",alt:"Pallof press"},
  carry:{n:"Farmer Carry",m:"Grip / core / traps",i:10,cue:"Heaviest DBs you can hold. Tall posture, short quick steps. Time-based set.",alt:"Trap bar carry / Suitcase carry"},
+goblet:{n:"Goblet Squat",m:"Quads / glutes",i:5,cue:"Hold a dumbbell at your chest. Sit straight down between your feet, elbows inside your knees. Chest tall the whole way.",alt:"Hack squat / Leg press"},
+ db_rdl:{n:"Dumbbell Romanian Deadlift",m:"Hamstrings / glutes",i:10,cue:"Soft knees, push the hips back, dumbbells brush your thighs. Stop when you feel the stretch, not when you reach the floor.",alt:"Machine hip hinge / Back extension"},
+ step_up:{n:"Step-Up",m:"Quads / glutes",i:10,cue:"Knee-height box. Drive through the top foot, do not push off the bottom one. Count reps per leg.",alt:"Reverse lunge / Split squat"},
+ plank:{n:"Plank",m:"Core",i:5,cue:"Forearms down, ribs pulled toward hips, glutes squeezed. Time-based set, not reps.",alt:"Dead bug / Ab wheel"},
+ glute_mach:{n:"Glute Machine / Cable Kickback",m:"Glutes",i:10,cue:"One leg at a time. Squeeze at the top for a second, control the return. No arching the low back.",alt:"Hip thrust / Cable pull-through"},
  neck:{n:"Neck Curl / Extension",m:"Neck",i:5,cue:"Optional but it changes how you look in a t-shirt. Light plate, very slow, high reps.",alt:"Neck harness"}
 };
 
@@ -350,49 +355,145 @@ const DAYS={
   {e:"neck",s:2,lo:15,hi:20,r:50,t:"P"}]},
  rest:{n:"Rest",sub:"Recovery day",color:"var(--dim)",b:[]}
 };
-const DAYKEYS=["upperA","lowerA","upperB","lowerB","arms","rest"];
+
+/* Beginner full-body days: fewer exercises, more practice per movement pattern. */
+DAYS.fullA={n:"Full Body A",sub:"Squat, push, pull",color:"var(--blue)",b:[
+  {e:"goblet",s:3,lo:8,hi:12,r:120,t:"H"},
+  {e:"machine_press",s:3,lo:8,hi:12,r:105,t:"H"},
+  {e:"csr",s:3,lo:8,hi:12,r:105,t:"H"},
+  {e:"seated_curl",s:3,lo:10,hi:15,r:90,t:"H"},
+  {e:"lat_cable",s:2,lo:12,hi:18,r:60,t:"P"},
+  {e:"plank",s:3,lo:20,hi:45,r:60,t:"P",note:"seconds, not reps"}]};
+DAYS.fullB={n:"Full Body B",sub:"Hinge, press, pulldown",color:"var(--blue)",b:[
+  {e:"db_rdl",s:3,lo:8,hi:12,r:120,t:"H"},
+  {e:"pulldown_n",s:3,lo:8,hi:12,r:105,t:"H"},
+  {e:"ohp",s:3,lo:8,hi:12,r:105,t:"H"},
+  {e:"leg_press",s:3,lo:10,hi:15,r:105,t:"H"},
+  {e:"cable_curl",s:2,lo:10,hi:15,r:70,t:"P"},
+  {e:"pushdown",s:2,lo:12,hi:18,r:60,t:"P"}]};
+DAYS.fullC={n:"Full Body C",sub:"Glutes, row, carry",color:"var(--blue)",b:[
+  {e:"hip_thrust",s:3,lo:10,hi:15,r:120,t:"H"},
+  {e:"step_up",s:3,lo:8,hi:12,r:105,t:"H",note:"per leg"},
+  {e:"csr_wide",s:3,lo:10,hi:15,r:90,t:"H"},
+  {e:"inc_db",s:3,lo:10,hi:15,r:90,t:"H"},
+  {e:"glute_mach",s:2,lo:12,hi:15,r:70,t:"P",note:"per leg"},
+  {e:"calf_st",s:2,lo:10,hi:15,r:60,t:"P"},
+  {e:"hang_raise",s:2,lo:10,hi:15,r:60,t:"P"}]};
+DAYS.cond={n:"Conditioning",sub:"Cardio and mobility",color:"var(--green)",b:[]};
+
+const DAYKEYS=["upperA","lowerA","upperB","lowerB","arms","fullA","fullB","fullC","cond","rest"];
+
+/* ============================ PROGRAM TEMPLATES ============================
+   Each sets the whole week at once. Every day stays editable afterwards. */
+const PROGRAMS={
+ upperlower:{n:"Upper / Lower",d:"Four lifting days, each muscle twice a week, plus an optional arms day. The strongest choice once you have a base.",
+   lvl:"Some experience or more",
+   s:{0:"rest",1:"upperA",2:"lowerA",3:"rest",4:"upperB",5:"lowerB",6:"arms"}},
+ foundations:{n:"Foundations",d:"Three full-body sessions with two conditioning days between them. Every movement pattern practised three times a week, which is how technique and strength come fastest when you are new.",
+   lvl:"New to lifting",
+   s:{0:"rest",1:"fullA",2:"cond",3:"fullB",4:"cond",5:"fullC",6:"rest"}},
+ fullbody4:{n:"Full Body ×4",d:"Four full-body days. More total practice than Foundations without the jump to a split.",
+   lvl:"New to lifting, more time",
+   s:{0:"rest",1:"fullA",2:"fullB",3:"cond",4:"fullC",5:"fullA",6:"rest"}},
+ minimal:{n:"Three Days",d:"Three sessions a week and nothing else required. The honest minimum that still builds muscle.",
+   lvl:"Any level, limited time",
+   s:{0:"rest",1:"fullA",2:"rest",3:"fullB",4:"rest",5:"fullC",6:"rest"}}
+};
+
+/* Experience changes how hard and how much, not what. */
+const LEVELS={
+ novice:{n:"New to lifting",vol:0.85,rirAdd:1,d:"Lower volume, always stopping well short of failure. Technique first — strength comes fast at this stage regardless."},
+ some:{n:"Some experience",vol:1.0,rirAdd:0.5,d:"Full volume, a little more in reserve than a seasoned lifter."},
+ trained:{n:"Trains consistently",vol:1.0,rirAdd:0,d:"Full volume and full prescribed effort."}
+};
+
+const GOALS={
+ health:{n:"General fitness",phase:"maint",d:"Hold weight, build strength and conditioning. Protein stays high, calories stay level."},
+ muscle:{n:"Build muscle",phase:"lean",d:"A small surplus so training has something to build with."},
+ fat:{n:"Lose fat",phase:"cut",d:"A deficit with protein and training held high, so what you lose is fat."},
+ strength:{n:"Get stronger",phase:"maint",d:"Maintenance calories, heavier work, longer rests."}
+};
 
 /* Week character inside a 6-week mesocycle */
 const WEEKS=[
- {n:"W1 · Introduce",rir:"3 RIR",vol:1.00,ld:"Leave 3 in the tank. Establish loads.",c:"var(--blue)"},
- {n:"W2 · Build",rir:"2 RIR",vol:1.00,ld:"Add reps or a little weight on everything you can.",c:"var(--blue)"},
- {n:"W3 · Build",rir:"2 RIR",vol:1.12,ld:"Add a set to the first two lifts. Keep pushing loads.",c:"var(--blue)"},
- {n:"W4 · Push",rir:"1 RIR",vol:1.12,ld:"One rep from failure on working sets. This is where growth is bought.",c:"var(--yellow)"},
- {n:"W5 · Overreach",rir:"0-1 RIR",vol:1.12,ld:"Last set of each isolation goes to true failure. Hardest week.",c:"var(--red)"},
- {n:"W6 · Deload",rir:"4 RIR",vol:0.55,ld:"Half the sets, ~15% off the bar. You are recovering, not training.",c:"var(--green)"}
+ {n:"W1 · Introduce",rirN:3,rir:"3 RIR",vol:1.00,ld:"Leave 3 in the tank. Establish loads.",c:"var(--blue)"},
+ {n:"W2 · Build",rirN:2,rir:"2 RIR",vol:1.00,ld:"Add reps or a little weight on everything you can.",c:"var(--blue)"},
+ {n:"W3 · Build",rirN:2,rir:"2 RIR",vol:1.12,ld:"Add a set to the first two lifts. Keep pushing loads.",c:"var(--blue)"},
+ {n:"W4 · Push",rirN:1,rir:"1 RIR",vol:1.12,ld:"One rep from failure on working sets. This is where growth is bought.",c:"var(--yellow)"},
+ {n:"W5 · Overreach",rirN:0.5,rir:"0-1 RIR",vol:1.12,ld:"Last set of each isolation goes to true failure. Hardest week.",c:"var(--red)"},
+ {n:"W6 · Deload",rirN:4,rir:"4 RIR",vol:0.55,ld:"Half the sets, ~15% off the bar. You are recovering, not training.",c:"var(--green)"}
 ];
 
-/* ============================ FOOD DB (all gluten-free & dairy-free) ============================
-   per 100g unless u:'ea' (per unit). k=kcal p=protein c=carb f=fat  b=bucket p|c|f|v  */
+/* ============================ ALLERGENS ============================ */
+const ALLERGENS=[
+ {k:"gluten",n:"Gluten / wheat"},{k:"dairy",n:"Dairy"},{k:"treenut",n:"Tree nuts"},
+ {k:"peanut",n:"Peanuts"},{k:"soy",n:"Soy"},{k:"egg",n:"Eggs"},
+ {k:"fish",n:"Fish"},{k:"shellfish",n:"Shellfish"},{k:"sesame",n:"Sesame"}];
+
+/* ============================ FOOD DB ============================
+   per 100g unless u:'ea'. k=kcal p=protein c=carb f=fat  b=bucket p|c|f|v
+   a=[allergens]  Anything without an `a` is free of all nine. */
 const FOOD={
  chick:{n:"Chicken breast, cooked",k:165,p:31,c:0,f:3.6,b:"p"},
  thigh:{n:"Chicken thigh, cooked",k:209,p:26,c:0,f:10.9,b:"p"},
  beef93:{n:"93/7 ground beef, cooked",k:182,p:25,c:0,f:9,b:"p"},
  sirloin:{n:"Top sirloin, cooked",k:212,p:30,c:0,f:9.6,b:"p"},
  turkey:{n:"93/7 ground turkey, cooked",k:176,p:27,c:0,f:8,b:"p"},
- salmon:{n:"Salmon, cooked",k:208,p:22,c:0,f:13,b:"p"},
- cod:{n:"Cod, cooked",k:105,p:23,c:0,f:0.9,b:"p"},
- shrimp:{n:"Shrimp, cooked",k:99,p:24,c:0.2,f:0.3,b:"p"},
- tuna:{n:"Canned tuna, drained",k:116,p:26,c:0,f:0.8,b:"p"},
+ deli:{n:"Deli turkey breast",k:104,p:17,c:4,f:1.7,b:"p"},
  pork:{n:"Pork tenderloin, cooked",k:143,p:26,c:0,f:3.5,b:"p"},
  bison:{n:"Ground bison, cooked",k:179,p:25,c:0,f:8,b:"p"},
- egg:{n:"Whole egg (large)",k:72,p:6.3,c:0.4,f:4.8,b:"p",u:"ea"},
- white:{n:"Egg whites",k:52,p:10.9,c:0.7,f:0.2,b:"p"},
+ venison:{n:"Venison, cooked",k:158,p:30,c:0,f:3.2,b:"p"},
+ lamb:{n:"Lamb, cooked",k:258,p:25,c:0,f:17,b:"p"},
+ jerky:{n:"Beef jerky",k:410,p:33,c:11,f:26,b:"p"},
+ salmon:{n:"Salmon, cooked",k:208,p:22,c:0,f:13,b:"p",a:["fish"]},
+ cansalmon:{n:"Canned salmon with bones",k:167,p:23,c:0,f:8,b:"p",a:["fish"]},
+ sardine:{n:"Sardines with bones",k:208,p:25,c:0,f:11,b:"p",a:["fish"]},
+ cod:{n:"Cod, cooked",k:105,p:23,c:0,f:0.9,b:"p",a:["fish"]},
+ tilapia:{n:"Tilapia, cooked",k:128,p:26,c:0,f:2.7,b:"p",a:["fish"]},
+ tuna:{n:"Canned tuna, drained",k:116,p:26,c:0,f:0.8,b:"p",a:["fish"]},
+ shrimp:{n:"Shrimp, cooked",k:99,p:24,c:0.2,f:0.3,b:"p",a:["shellfish"]},
+ scallop:{n:"Scallops, cooked",k:111,p:20.5,c:5.4,f:0.8,b:"p",a:["shellfish"]},
+ egg:{n:"Whole egg (large)",k:72,p:6.3,c:0.4,f:4.8,b:"p",u:"ea",a:["egg"]},
+ white:{n:"Egg whites",k:52,p:10.9,c:0.7,f:0.2,b:"p",a:["egg"]},
  sausage:{n:"GF chicken sausage",k:150,p:16,c:2,f:8,b:"p"},
- protpwd:{n:"Protein powder (pea/beef/egg)",k:380,p:80,c:6,f:4,b:"p"},
+ tofu:{n:"Firm tofu",k:144,p:17,c:3,f:9,b:"p",a:["soy"]},
+ tempeh:{n:"Tempeh",k:192,p:20,c:8,f:11,b:"p",a:["soy"]},
+ edamame:{n:"Edamame",k:121,p:12,c:9,f:5,b:"p",a:["soy"]},
+ protpwd:{n:"Protein powder (pea/beef/rice)",k:380,p:80,c:6,f:4,b:"p"},
+ wheypwd:{n:"Whey protein powder",k:400,p:80,c:8,f:5,b:"p",a:["dairy"]},
+ greek:{n:"Greek yogurt, nonfat",k:59,p:10,c:3.6,f:0.4,b:"p",a:["dairy"]},
+ cottage:{n:"Cottage cheese, 2%",k:84,p:11,c:4.3,f:2.3,b:"p",a:["dairy"]},
+ milk:{n:"Milk, 2%",k:50,p:3.3,c:4.8,f:2,b:"p",a:["dairy"]},
+ cheddar:{n:"Cheddar cheese",k:403,p:25,c:1.3,f:33,b:"f",a:["dairy"]},
  rice:{n:"White/jasmine rice, cooked",k:130,p:2.7,c:28,f:0.3,b:"c"},
  brice:{n:"Brown rice, cooked",k:123,p:2.7,c:26,f:1,b:"c"},
  potato:{n:"White potato, cooked",k:87,p:2,c:20,f:0.1,b:"c"},
  sweet:{n:"Sweet potato, cooked",k:90,p:2,c:21,f:0.1,b:"c"},
  oats:{n:"GF rolled oats, dry",k:379,p:13,c:67,f:7,b:"c"},
  quinoa:{n:"Quinoa, cooked",k:120,p:4.4,c:21,f:1.9,b:"c"},
+ buckwheat:{n:"Buckwheat, cooked",k:92,p:3.4,c:20,f:0.6,b:"c"},
+ millet:{n:"Millet, cooked",k:119,p:3.5,c:23,f:1,b:"c"},
+ polenta:{n:"Polenta / grits, cooked",k:70,p:1.6,c:15,f:0.3,b:"c"},
  gfpasta:{n:"GF pasta, cooked",k:145,p:3,c:31,f:0.6,b:"c"},
  gfbread:{n:"GF bread",k:250,p:4,c:48,f:4,b:"c"},
+ wwbread:{n:"Whole wheat bread",k:247,p:13,c:41,f:3.4,b:"c",a:["gluten"]},
+ wwpasta:{n:"Whole wheat pasta, cooked",k:124,p:5.3,c:26,f:0.5,b:"c",a:["gluten"]},
+ couscous:{n:"Couscous, cooked",k:112,p:3.8,c:23,f:0.2,b:"c",a:["gluten"]},
+ farro:{n:"Farro, cooked",k:130,p:5,c:26,f:1,b:"c",a:["gluten"]},
  ricecake:{n:"Rice cakes",k:387,p:8,c:82,f:3,b:"c"},
  tortilla:{n:"Corn tortilla",k:218,p:5.7,c:45,f:2.9,b:"c"},
+ plantain:{n:"Plantain, cooked",k:122,p:1.3,c:32,f:0.4,b:"c"},
  banana:{n:"Banana",k:89,p:1.1,c:23,f:0.3,b:"c"},
  apple:{n:"Apple",k:52,p:0.3,c:14,f:0.2,b:"c"},
+ orange:{n:"Orange",k:47,p:0.9,c:12,f:0.1,b:"c"},
  berries:{n:"Blueberries",k:57,p:0.7,c:14,f:0.3,b:"c"},
+ strawberry:{n:"Strawberries",k:32,p:0.7,c:7.7,f:0.3,b:"c"},
+ raspberry:{n:"Raspberries",k:52,p:1.2,c:12,f:0.7,b:"c"},
+ cherry:{n:"Cherries",k:63,p:1.1,c:16,f:0.2,b:"c"},
+ grape:{n:"Grapes",k:69,p:0.7,c:18,f:0.2,b:"c"},
+ mango:{n:"Mango",k:60,p:0.8,c:15,f:0.4,b:"c"},
+ kiwi:{n:"Kiwi",k:61,p:1.1,c:15,f:0.5,b:"c"},
+ melon:{n:"Watermelon",k:30,p:0.6,c:7.6,f:0.2,b:"c"},
  pineapple:{n:"Pineapple",k:50,p:0.5,c:13,f:0.1,b:"c"},
  dates:{n:"Dates",k:282,p:2.5,c:75,f:0.4,b:"c"},
  honey:{n:"Honey",k:304,p:0.3,c:82,f:0,b:"c"},
@@ -401,52 +502,89 @@ const FOOD={
  blackbean:{n:"Black beans, cooked",k:132,p:8.9,c:24,f:0.5,b:"c"},
  lentil:{n:"Lentils, cooked",k:116,p:9,c:20,f:0.4,b:"c"},
  chickpea:{n:"Chickpeas, cooked",k:164,p:8.9,c:27,f:2.6,b:"c"},
+ corn:{n:"Corn",k:96,p:3.4,c:21,f:1.5,b:"c"},
+ peas:{n:"Green peas",k:81,p:5.4,c:14,f:0.4,b:"c"},
+ butternut:{n:"Butternut squash",k:45,p:1,c:12,f:0.1,b:"c"},
  oil:{n:"Olive oil",k:884,p:0,c:0,f:100,b:"f"},
- avocado:{n:"Avocado",k:160,p:2,c:8.5,f:14.7,b:"f"},
- almond:{n:"Almonds",k:579,p:21,c:22,f:50,b:"f"},
- walnut:{n:"Walnuts",k:654,p:15,c:14,f:65,b:"f"},
- cashew:{n:"Cashews",k:553,p:18,c:30,f:44,b:"f"},
- ab:{n:"Almond butter",k:614,p:21,c:19,f:56,b:"f"},
- pb:{n:"Peanut butter",k:588,p:25,c:20,f:50,b:"f"},
- chia:{n:"Chia seeds",k:486,p:17,c:42,f:31,b:"f"},
+ avoil:{n:"Avocado oil",k:884,p:0,c:0,f:100,b:"f"},
  coconutoil:{n:"Coconut oil",k:862,p:0,c:0,f:100,b:"f"},
+ avocado:{n:"Avocado",k:160,p:2,c:8.5,f:14.7,b:"f"},
  olives:{n:"Olives",k:115,p:0.8,c:6,f:11,b:"f"},
+ sunbutter:{n:"Sunflower seed butter",k:617,p:17.3,c:23,f:55,b:"f"},
+ sunseed:{n:"Sunflower seeds",k:584,p:21,c:20,f:51,b:"f"},
+ pumpkinseed:{n:"Pumpkin seeds",k:559,p:30,c:11,f:49,b:"f"},
+ hemp:{n:"Hemp hearts",k:553,p:32,c:8.7,f:49,b:"f"},
+ chia:{n:"Chia seeds",k:486,p:17,c:42,f:31,b:"f"},
+ flax:{n:"Ground flaxseed",k:534,p:18,c:29,f:42,b:"f"},
+ coconutflake:{n:"Coconut flakes, unsweetened",k:660,p:6.9,c:24,f:64,b:"f"},
+ tahini:{n:"Tahini",k:595,p:17,c:21,f:53,b:"f",a:["sesame"]},
+ pb:{n:"Peanut butter",k:588,p:25,c:20,f:50,b:"f",a:["peanut"]},
+ peanut:{n:"Peanuts",k:567,p:26,c:16,f:49,b:"f",a:["peanut"]},
+ almond:{n:"Almonds",k:579,p:21,c:22,f:50,b:"f",a:["treenut"]},
+ walnut:{n:"Walnuts",k:654,p:15,c:14,f:65,b:"f",a:["treenut"]},
+ cashew:{n:"Cashews",k:553,p:18,c:30,f:44,b:"f",a:["treenut"]},
+ pistachio:{n:"Pistachios",k:560,p:20,c:28,f:45,b:"f",a:["treenut"]},
+ pecan:{n:"Pecans",k:691,p:9,c:14,f:72,b:"f",a:["treenut"]},
+ ab:{n:"Almond butter",k:614,p:21,c:19,f:56,b:"f",a:["treenut"]},
+ darkchoc:{n:"Dark chocolate, 85%",k:598,p:7.8,c:46,f:43,b:"f",a:["soy"]},
  broccoli:{n:"Broccoli",k:35,p:2.4,c:7,f:0.4,b:"v"},
+ cauliflower:{n:"Cauliflower",k:25,p:1.9,c:5,f:0.3,b:"v"},
+ brussels:{n:"Brussels sprouts",k:43,p:3.4,c:9,f:0.3,b:"v"},
+ cabbage:{n:"Cabbage",k:25,p:1.3,c:6,f:0.1,b:"v"},
+ kale:{n:"Kale",k:49,p:4.3,c:9,f:0.9,b:"v"},
  spinach:{n:"Spinach",k:23,p:2.9,c:3.6,f:0.4,b:"v"},
+ greens:{n:"Mixed greens",k:20,p:1.5,c:3,f:0.2,b:"v"},
  asparagus:{n:"Asparagus",k:22,p:2.4,c:4,f:0.2,b:"v"},
- pepper:{n:"Bell pepper",k:31,p:1,c:6,f:0.3,b:"v"},
  greenbean:{n:"Green beans",k:35,p:1.8,c:8,f:0.1,b:"v"},
  zucchini:{n:"Zucchini",k:17,p:1.2,c:3.1,f:0.3,b:"v"},
- greens:{n:"Mixed greens",k:20,p:1.5,c:3,f:0.2,b:"v"},
+ pepper:{n:"Bell pepper",k:31,p:1,c:6,f:0.3,b:"v"},
+ mushroom:{n:"Mushrooms",k:22,p:3.1,c:3.3,f:0.3,b:"v"},
+ onion:{n:"Onion",k:40,p:1.1,c:9.3,f:0.1,b:"v"},
+ tomato:{n:"Tomato",k:18,p:0.9,c:3.9,f:0.2,b:"v"},
+ cucumber:{n:"Cucumber",k:15,p:0.7,c:3.6,f:0.1,b:"v"},
  carrot:{n:"Carrots",k:41,p:0.9,c:10,f:0.2,b:"v"},
- almondmilk:{n:"Almond milk, unsweetened",k:15,p:0.6,c:0.6,f:1.2,b:"v"},
- cocoyog:{n:"Coconut yogurt, unsweetened",k:97,p:1,c:7,f:7,b:"f"},
- salsa:{n:"Salsa",k:29,p:1.5,c:6,f:0.2,b:"v"}
+ beet:{n:"Beets",k:43,p:1.6,c:10,f:0.2,b:"v"},
+ salsa:{n:"Salsa",k:29,p:1.5,c:6,f:0.2,b:"v"},
+ almondmilk:{n:"Almond milk, unsweetened",k:15,p:0.6,c:0.6,f:1.2,b:"v",a:["treenut"]},
+ oatmilk:{n:"Oat milk, unsweetened",k:43,p:0.8,c:6.7,f:1.5,b:"v"},
+ ricemilk:{n:"Rice milk",k:47,p:0.3,c:9.2,f:1,b:"v"},
+ coconutbev:{n:"Coconut milk beverage",k:20,p:0.2,c:1,f:1.8,b:"v"},
+ cocoyog:{n:"Coconut yogurt, unsweetened",k:97,p:1,c:7,f:7,b:"f"}
 };
 
 /* ============================ MEAL TEMPLATES ============================
-   Base plan sums to roughly 3,000 kcal / 225P / 340C / 82F; portions auto-scale to your target. */
+   Five variants per slot, spread across allergens so filtering always leaves options. */
 const PLAN=[
- {id:"m0",n:"Pre-lift",tm:"5:40a",fix:true,v:[
+ {id:"m0",n:"Pre-lift",tm:"5:40a",v:[
    {n:"Banana & rice cake",it:[{f:"banana",g:120},{f:"ricecake",g:18}]},
-   {n:"Dates & salt water",it:[{f:"dates",g:45}]},
-   {n:"Fruit juice",it:[{f:"oj",g:330}]}]},
+   {n:"Dates",it:[{f:"dates",g:45}]},
+   {n:"Fruit juice",it:[{f:"oj",g:330}]},
+   {n:"Apple & honey",it:[{f:"apple",g:180},{f:"honey",g:15}]},
+   {n:"Plantain",it:[{f:"plantain",g:140}]}]},
  {id:"m1",n:"Post-lift breakfast",tm:"7:30a",v:[
    {n:"Eggs, oats & berries",it:[{f:"white",g:200},{f:"egg",g:2},{f:"oats",g:80},{f:"berries",g:100},{f:"honey",g:20}]},
    {n:"Steak & sweet potato hash",it:[{f:"sirloin",g:170},{f:"sweet",g:280},{f:"pepper",g:100,fx:1},{f:"oil",g:8}]},
-   {n:"Protein oats & almond butter",it:[{f:"protpwd",g:40},{f:"oats",g:100},{f:"banana",g:120},{f:"ab",g:20}]}]},
+   {n:"Protein oats & seed butter",it:[{f:"protpwd",g:40},{f:"oats",g:100},{f:"banana",g:120},{f:"sunbutter",g:20}]},
+   {n:"Greek yogurt bowl",it:[{f:"greek",g:250},{f:"oats",g:60},{f:"strawberry",g:150},{f:"pumpkinseed",g:20},{f:"honey",g:15}]},
+   {n:"Turkey & potato skillet",it:[{f:"turkey",g:180},{f:"potato",g:300},{f:"spinach",g:80,fx:1},{f:"avoil",g:10}]}]},
  {id:"m2",n:"Lunch",tm:"12:00p",v:[
    {n:"Chicken, rice & broccoli",it:[{f:"chick",g:220},{f:"rice",g:300},{f:"broccoli",g:150,fx:1},{f:"oil",g:10}]},
    {n:"Beef & potato bowl",it:[{f:"beef93",g:200},{f:"potato",g:350},{f:"greens",g:80,fx:1},{f:"avocado",g:50}]},
-   {n:"Salmon, quinoa & asparagus",it:[{f:"salmon",g:180},{f:"quinoa",g:250},{f:"asparagus",g:150,fx:1},{f:"oil",g:6}]}]},
+   {n:"Salmon, quinoa & asparagus",it:[{f:"salmon",g:180},{f:"quinoa",g:250},{f:"asparagus",g:150,fx:1},{f:"oil",g:6}]},
+   {n:"Tofu & rice stir-fry",it:[{f:"tofu",g:250},{f:"rice",g:300},{f:"cabbage",g:120,fx:1},{f:"pepper",g:80,fx:1},{f:"avoil",g:14}]},
+   {n:"Turkey wrap plate",it:[{f:"deli",g:170},{f:"wwbread",g:110},{f:"cucumber",g:100,fx:1},{f:"tomato",g:80,fx:1},{f:"avocado",g:60}]}]},
  {id:"m3",n:"Afternoon fuel",tm:"3:30p",v:[
-   {n:"Shake, rice cakes & almond butter",it:[{f:"protpwd",g:35},{f:"almondmilk",g:250,fx:1},{f:"ricecake",g:40},{f:"ab",g:25}]},
+   {n:"Shake, rice cakes & seed butter",it:[{f:"protpwd",g:35},{f:"oatmilk",g:250,fx:1},{f:"ricecake",g:40},{f:"sunbutter",g:25}]},
    {n:"Tuna, corn tortillas & avocado",it:[{f:"tuna",g:140},{f:"tortilla",g:70},{f:"avocado",g:70},{f:"salsa",g:40,fx:1}]},
-   {n:"Chicken sausage & fruit",it:[{f:"sausage",g:150},{f:"apple",g:180},{f:"cashew",g:30}]}]},
+   {n:"Chicken sausage & fruit",it:[{f:"sausage",g:150},{f:"apple",g:180},{f:"pumpkinseed",g:30}]},
+   {n:"Cottage cheese & fruit",it:[{f:"cottage",g:250},{f:"pineapple",g:150},{f:"almond",g:25}]},
+   {n:"Jerky & trail mix",it:[{f:"jerky",g:60},{f:"grape",g:150},{f:"sunseed",g:30}]}]},
  {id:"m4",n:"Dinner",tm:"7:00p",v:[
    {n:"Ground beef, sweet potato & asparagus",it:[{f:"beef93",g:200},{f:"sweet",g:300},{f:"asparagus",g:200,fx:1},{f:"avocado",g:60}]},
    {n:"Chicken thigh, rice & greens",it:[{f:"thigh",g:220},{f:"rice",g:320},{f:"greenbean",g:180,fx:1},{f:"oil",g:8}]},
-   {n:"Shrimp & GF pasta",it:[{f:"shrimp",g:230},{f:"gfpasta",g:330},{f:"zucchini",g:180,fx:1},{f:"oil",g:18}]}]}
+   {n:"Shrimp & GF pasta",it:[{f:"shrimp",g:230},{f:"gfpasta",g:330},{f:"zucchini",g:180,fx:1},{f:"oil",g:18}]},
+   {n:"Pork, millet & brussels",it:[{f:"pork",g:220},{f:"millet",g:300},{f:"brussels",g:180,fx:1},{f:"oil",g:14}]},
+   {n:"Lentil & vegetable bowl",it:[{f:"lentil",g:330},{f:"brice",g:220},{f:"kale",g:120,fx:1},{f:"mushroom",g:120,fx:1},{f:"oil",g:16}]}]}
 ];
 
 /* ============================ CARDIO ============================
@@ -457,13 +595,27 @@ const CARDIO={
    d:"Only if the clock allows. Upper days can take cardio right after lifting with no cost to your legs."},
  upperB:{n:"Incline walk finisher",min:10,opt:true,tgt:"12% grade · 3.0-3.2 mph",
    d:"Same as Upper A. Skip it without guilt if you are running late — the rest-day session is the one that matters."},
- lowerA:null, lowerB:null,
+ lowerA:null, lowerB:null, fullA:null, fullB:null, fullC:null,
  arms:{n:"Incline intervals",min:15,opt:false,tgt:"6 rounds · 60s hard / 90s easy",
-   d:"60 seconds at 15% grade and 4.0 mph, then 90 seconds at 8% and 2.8 mph. Six rounds. Walking, never running — your knees at 40 do not need the impact and the payoff is identical."},
+   d:"60 seconds at 15% grade and 4.0 mph, then 90 seconds at 8% and 2.8 mph. Six rounds. Walking, never running — the payoff is identical and your knees keep working."},
+ cond:{n:"Zone 2 walk & mobility",min:35,opt:false,tgt:"10-15% grade · conversational",
+   d:"Thirty-five minutes at a pace you could hold a conversation through, then ten minutes of stretching whatever felt tight this week."},
  rest:{n:"Zone 2 incline walk",min:38,opt:false,tgt:"10-15% grade · 115-130 bpm",
-   d:"The main event. Set the grade so your heart rate holds 115-130 and you could still speak a full sentence. If you are breathing too hard to talk, lower the grade — going harder here makes it worse, not better."}
+   d:"The main event. Set the grade so your heart rate holds 115-130 and you could still speak a full sentence. Breathing too hard to talk means lower the grade — going harder here makes it worse, not better."}
 };
 const STEPS_TGT=7000;
+
+/* ============================ WATER + SUPPLEMENTS ============================ */
+const SUPPS=[
+ {k:"creatine",n:"Creatine monohydrate",d:"5 g",w:"One scoop, any time of day. Skip loading — 5 g daily saturates you in three to four weeks with none of the GI upset. Monohydrate only; the fancy forms cost more for worse evidence."},
+ {k:"d3",n:"Vitamin D3",d:"2,000 IU",w:"With a meal containing fat. Indoor training and little sun make this a likely shortfall. Get 25-OH bloodwork before settling on a dose."},
+ {k:"omega",n:"Fish oil",d:"1,000 mg EPA+DHA",w:"Read the EPA+DHA line on the back, not the capsule size on the front."},
+ {k:"cal",n:"Calcium citrate",d:"500 mg",w:"Only on days the food fell short. Citrate absorbs without a meal; carbonate does not. Avoiding dairy puts most people near half the 1,000 mg target."},
+ {k:"mag",n:"Magnesium glycinate",d:"300 mg",w:"Evening. Glycinate rather than oxide, which mostly just loosens your bowels."},
+ {k:"iron",n:"Iron",d:"18 mg",w:"Only with a confirmed low ferritin — never supplement iron on a guess. Take with vitamin C, away from calcium."},
+ {k:"multi",n:"Multivitamin",d:"1 serving",w:"Insurance, not a substitute for the food. Check the label against your allergens."}
+];
+const POURS=[8,16,24];
 
 /* ============================ TAPE MEASUREMENTS ============================
    Targets are derived from your own skeleton — wrist, ankle, knee and height do not
@@ -493,17 +645,6 @@ const PRIO={
  waist:{n:"Waist",d:[],b:[]}
 };
 
-/* ============================ WATER + SUPPLEMENTS ============================
-   Stored in fluid ounces; shown in ml when the unit toggle is on kilograms. */
-const SUPPS=[
- {k:"creatine",n:"Creatine monohydrate",d:"5 g",w:"One scoop, any time of day. Skip loading — 5 g daily saturates you in three to four weeks with none of the GI upset. Monohydrate only; the fancy forms cost more for worse evidence."},
- {k:"d3",n:"Vitamin D3",d:"2,000 IU",w:"With a meal containing fat. Maine, indoor training, no dairy — this is your most likely shortfall. Get 25-OH bloodwork before settling on a dose."},
- {k:"omega",n:"Fish oil",d:"1,000 mg EPA+DHA",w:"Read the EPA+DHA line on the back, not the capsule size on the front. Only your salmon variant supplies any from food."},
- {k:"cal",n:"Calcium citrate",d:"500 mg",w:"Only on days the food fell short. Citrate absorbs without a meal; carbonate does not. No dairy means you are likely near half the 1,000 mg target."},
- {k:"mag",n:"Magnesium glycinate",d:"300 mg",w:"Evening. Glycinate rather than oxide, which mostly just loosens your bowels."},
- {k:"multi",n:"Multivitamin",d:"1 serving",w:"Insurance, not a substitute for the food. Check the label says gluten and dairy free."}
-];
-const POURS=[8,16,24];
 
 const PHASES={
  regain:{n:"Regain",adj:0,c:"var(--green)",d:"Maintenance calories. You are re-earning muscle you already built — that happens at maintenance and it happens fast. 4-6 weeks."},
@@ -513,7 +654,8 @@ const PHASES={
 };
 /* ============================ STATE ============================ */
 const DEF={
-  v:2, name:"", age:35, heightIn:70, weightLb:180, activity:1.40, firstRun:1,
+  v:3, name:"", sex:"m", age:35, heightIn:70, weightLb:180, activity:1.40, firstRun:1,
+  level:"some", goal:"health", program:"upperlower", allergens:[], allerSet:0,
   phase:"regain", kcalTweak:0, protPerLb:1.0, fatPerLb:0.42,
   start:null, unitKg:false,
   sched:{0:"rest",1:"upperA",2:"lowerA",3:"rest",4:"upperB",5:"lowerB",6:"arms"}, steps:7000, inc:{}, prio:[], supps:["creatine"], waterGoal:0, lastExport:0,
@@ -540,8 +682,7 @@ const toIn=v=>P.unitKg?v/2.54:v;
 const dsp=v=>{if(v===''||v==null||isNaN(v))return '';const n=P.unitKg?v/2.2046:v;return Math.round(n*10)/10;};
 
 /* ============================ LOCAL STORAGE ============================
-   Everything lives in this phone's own browser storage. No server, no account,
-   nothing transmitted. */
+   Everything lives in this phone's own browser storage. No server, no account. */
 const STORE={
   async get(k){ const v=localStorage.getItem(k); return v==null?null:{key:k,value:v}; },
   async set(k,v){ localStorage.setItem(k,v); return {key:k,value:v}; },
@@ -652,11 +793,21 @@ function weekInfo(d){
   const wk=Math.floor(n/7)+1;
   return {wk, mw:((wk-1)%6+6)%6, meso:Math.floor((wk-1)/6)+1, ret:wk<=2};
 }
+function rirLabel(n){
+  const r=Math.round(n*2)/2;
+  return (r%1?`${Math.floor(r)}-${Math.ceil(r)}`:String(r))+" RIR";
+}
+function lvl(){ return LEVELS[P.level]||LEVELS.trained; }
 function weekChar(d){
-  const wi=weekInfo(d);
-  if(wi.ret) return {...WEEKS[0], n:`W${wi.wk} · Return`, rir:"3-4 RIR", vol:0.75,
-    ld:"Coming off 3 months out. Stop well short of failure — your tendons are behind your muscles.", c:"var(--green)", wi};
-  return {...WEEKS[wi.mw], n:`W${wi.wk} · ${WEEKS[wi.mw].n.split("· ")[1]}`, wi};
+  const wi=weekInfo(d), L=lvl();
+  const shape=wi.ret
+    ? {...WEEKS[0], n:`W${wi.wk} · Return`, rirN:3.5, vol:0.75, c:"var(--green)",
+       ld:P.level==="novice"
+         ? "First two weeks. The job is learning the movements and finding your loads — not proving anything."
+         : "Coming back after time off. Stop well short of failure; your tendons are behind your muscles."}
+    : {...WEEKS[wi.mw], n:`W${wi.wk} · ${WEEKS[wi.mw].n.split("· ")[1]}`};
+  const rirN=shape.rirN+L.rirAdd;
+  return {...shape, rirN, rir:rirLabel(rirN), vol:shape.vol*L.vol, wi};
 }
 function dayKeyFor(d){
   const ov=getDay(d).w&&getDay(d).w.k;
@@ -839,7 +990,7 @@ function profileIssues(){
 /* ============================ NUTRITION ============================ */
 function targets(){
   const kg=P.weightLb/2.2046, cm=P.heightIn*2.54;
-  const bmr=10*kg+6.25*cm-5*P.age+5;
+  const bmr=10*kg+6.25*cm-5*P.age+(P.sex==="f"?-161:5);
   const tdee=bmr*P.activity;
   const ph=PHASES[P.phase]||PHASES.regain;
   const kcal=Math.round((tdee+ph.adj+(P.kcalTweak||0))/10)*10;
@@ -849,6 +1000,8 @@ function targets(){
   return {kcal,p,c,f,tdee:Math.round(tdee),bmr:Math.round(bmr)};
 }
 function fdOf(id){ return FOOD[id]||CF.find(x=>x.id===id)||null; }
+function blocked(f){ const a=(f&&f.a)||[]; const mine=P.allergens||[]; return a.some(k=>mine.indexOf(k)>-1); }
+function safeVariants(m){ return m.v.filter(v=>!v.it.some(it=>blocked(fdOf(it.f)))); }
 function itemMac(it,sc){
   const fd=fdOf(it.f); if(!fd) return {k:0,p:0,c:0,f:0,g:0};
   const g=it.g*sc, mult=fd.u==="ea"?g:g/100;
@@ -856,7 +1009,10 @@ function itemMac(it,sc){
 }
 function sumMac(a){ return a.reduce((t,x)=>({k:t.k+(x.k||0),p:t.p+(x.p||0),c:t.c+(x.c||0),f:t.f+(x.f||0)}),{k:0,p:0,c:0,f:0}); }
 
-function variantOf(m){ const i=(P.variant&&P.variant[m.id])||0; return m.v[i%m.v.length]; }
+function variantOf(m){
+  const s=safeVariants(m); if(!s.length) return null;
+  const i=(P.variant&&P.variant[m.id])||0; return s[i%s.length];
+}
 
 /* Scale remaining meals so they land on remaining macros. Veg + tagged items hold still. */
 function scaleMeals(meals,need){
@@ -888,12 +1044,15 @@ function todayPlan(d){
   const T=targets(), day=getDay(d);
   const eaten=sumMac(day.f);
   const doneIds=new Set(day.f.filter(x=>x.mid).map(x=>x.mid));
-  const left=PLAN.filter(m=>!doneIds.has(m.id)).map(m=>{const v=variantOf(m);return {id:m.id,n:m.n,tm:m.tm,vn:v.n,it:v.it.map(x=>({...x}))};});
+  const pool=PLAN.filter(m=>!doneIds.has(m.id));
+  const dropped=pool.filter(m=>!variantOf(m)).map(m=>m.n);
+  const left=pool.filter(m=>variantOf(m)).map(m=>{const v=variantOf(m);
+    return {id:m.id,n:m.n,tm:m.tm,vn:v.n,it:v.it.map(x=>({...x}))};});
   const need={p:Math.max(0,T.p-eaten.p),c:Math.max(0,T.c-eaten.c),f:Math.max(0,T.f-eaten.f),k:Math.max(0,T.kcal-eaten.k)};
   const scaled=left.length?scaleMeals(left,need):[];
   const proj=sumMac(scaled.flatMap(m=>m.it.map(it=>itemMac(it,1))));
   const tight=scaled.length&&need.k>0&&proj.k>need.k*1.08;
-  return {T,eaten,left:scaled,need,doneIds,proj,tight};
+  return {T,eaten,left:scaled,need,doneIds,proj,tight,dropped};
 }
 
 /* ============================ BODYWEIGHT TREND ============================ */
@@ -1153,6 +1312,8 @@ function vFuel(){
   </div>
   ${ci?`<div class="note ${ci.t}">${esc(ci.msg)}${ci.fix?` <button data-act="applyfix" data-v="${ci.fix}" style="text-decoration:underline;font-weight:600;font-size:13px">Apply it</button>`:""}</div>`:""}
   ${cardWater(d)}
+  ${!P.allerSet?`<div class="note r">You have not set your allergies yet. Open Setup and confirm them before following any meal below.</div>`:""}
+  ${pl.dropped&&pl.dropped.length?`<div class="note">No variant of ${pl.dropped.map(esc).join(" or ")} works with your exclusions, so it is left out. Log something of your own instead and the rest of the day re-cuts around it.</div>`:""}
   ${pl.tight?`<div class="note">Your remaining protein carries more fat than today's target leaves room for, so carbs are already at the floor. Swap to leaner protein — cod, shrimp, egg whites, chicken breast.</div>`
     :pl.left.length?`<div class="note b">Portions below are already re-cut to hit what is left of today. Eat something off-plan and they move again.</div>`:""}
   <div class="sec"><h2>Remaining meals</h2><div class="rule"></div></div>
@@ -1192,13 +1353,16 @@ function cardWater(d){
 }
 function foodResults(){
   const q=(UI.foodQ||"").trim().toLowerCase();
-  const all=[...Object.entries(FOOD).map(([id,f])=>({id,...f})),...CF];
-  if(!q) return `<div class="tiny">Start typing to search ${all.length} gluten-free, dairy-free foods.</div>`;
+  const every=[...Object.entries(FOOD).map(([id,f])=>({id,...f})),...CF];
+  const all=every.filter(f=>!blocked(f));              // your exclusions never appear, even in search
+  if(!q) return `<div class="tiny">Start typing to search ${all.length} foods${every.length-all.length?` — ${every.length-all.length} hidden by your exclusions`:""}.</div>`;
   const hit=all.filter(f=>f.n.toLowerCase().includes(q)).slice(0,7);
-  if(!hit.length) return `<div class="tiny">No match. Add it by hand below and it is there next time.</div>`;
+  const censored=every.filter(f=>blocked(f)&&f.n.toLowerCase().includes(q)).length;
+  if(!hit.length) return `<div class="tiny">${censored?`${censored} match${censored>1?"es are":" is"} hidden by your allergy settings. `:"No match. "}Add it by hand below and it is there next time.</div>`;
   return hit.map(f=>`<div class="item"><div class="nmx">${esc(f.n)}<div class="tiny">${f.k} kcal · ${f.p}P ${f.c}C ${f.f}F / ${f.u==="ea"?"each":"100g"}</div></div>
     <input type="number" inputmode="decimal" value="${f.u==="ea"?1:100}" id="q_${f.id}" style="width:62px;flex:0 0 62px;padding:8px 2px">
-    <button class="chip sm" data-act="addfood" data-v="${f.id}">Add</button></div>`).join("");
+    <button class="chip sm" data-act="addfood" data-v="${f.id}">Add</button></div>`).join("")
+   +(censored?`<div class="tiny" style="margin-top:8px;color:var(--yellow)">${censored} more match${censored>1?"es":""} hidden by your allergy settings.</div>`:"");
 }
 
 /* ============================ BODY ============================ */
@@ -1370,8 +1534,30 @@ function vSetup(){
   ${iss.length?`<div class="note r"><b>Your calorie target is being calculated from a bad number.</b>
     ${iss.map(x=>`<div style="margin-top:7px">${esc(x.label)} is <b>${esc(String(x.shown))}</b> — expected ${x.k==="heightIn"?dspIn(x.lo)+"-"+dspIn(x.hi)+UIN():x.lo+"-"+x.hi}.
       <button class="chip sm" data-act="fixprof" data-v="${x.k}" style="margin-left:6px">Reset to ${x.k==="heightIn"?dspIn(x.fix)+UIN():x.fix}</button></div>`).join("")}</div>`:""}
+  <div class="card"><div class="eyebrow" style="margin-bottom:11px">Training profile</div>
+    <div class="field"><label>Program</label>
+      <select onchange="setProgram(this.value)">${Object.entries(PROGRAMS).map(([k,v])=>`<option value="${k}" ${P.program===k?"selected":""}>${v.n} — ${v.lvl}</option>`).join("")}</select>
+      <div class="tiny" style="margin-top:6px">${esc((PROGRAMS[P.program]||PROGRAMS.upperlower).d)} Picking one rewrites your week; every day stays editable on the Plan tab afterwards.</div></div>
+    <div class="field"><label>Experience</label>
+      <select data-p="level" onchange="setPick(this)">${Object.entries(LEVELS).map(([k,v])=>`<option value="${k}" ${P.level===k?"selected":""}>${v.n}</option>`).join("")}</select>
+      <div class="tiny" style="margin-top:6px">${esc(lvl().d)}</div></div>
+    <div class="field" style="margin-bottom:0"><label>Goal</label>
+      <select data-p="goal" onchange="setGoal(this.value)">${Object.entries(GOALS).map(([k,v])=>`<option value="${k}" ${P.goal===k?"selected":""}>${v.n}</option>`).join("")}</select>
+      <div class="tiny" style="margin-top:6px">${esc((GOALS[P.goal]||GOALS.muscle).d)}</div></div>
+  </div>
+  <div class="card"><div class="eyebrow" style="margin-bottom:11px">Allergies &amp; avoidances</div>
+    ${!P.allerSet?`<div class="note r">Confirm these before using the meal plan. Nothing is excluded until you say so.</div>`:""}
+    <div class="tiny" style="margin-bottom:10px">Anything ticked is removed from the food library and from the meal suggestions. Cross-contamination is still a label problem — check packaging.</div>
+    <div class="chips">${ALLERGENS.map(a=>`<button class="chip ${(P.allergens||[]).indexOf(a.k)>-1?"on":""}" data-act="aller" data-v="${a.k}">${a.n}</button>`).join("")}</div>
+    <div class="tiny" style="margin-top:10px">${(()=>{const n=Object.values(FOOD).filter(f=>!blocked(f)).length;
+      return `${n} of ${Object.keys(FOOD).length} foods available${(P.allergens||[]).length?` with your ${(P.allergens||[]).length} exclusion${(P.allergens||[]).length>1?"s":""}`:""}.`;})()}</div>
+  </div>
   <div class="card"><div class="eyebrow" style="margin-bottom:12px">You</div>
     <div class="field"><label>Name</label><input value="${esc(P.name)}" data-p="name" oninput="setProf(this)" onblur="commitProf(this)"></div>
+    <div class="field"><label>Sex (for the calorie formula)</label>
+      <div class="chips"><button class="chip ${P.sex!=="f"?"on":""}" data-act="sex" data-v="m">Male</button>
+      <button class="chip ${P.sex==="f"?"on":""}" data-act="sex" data-v="f">Female</button></div>
+      <div class="tiny" style="margin-top:6px">Mifflin-St Jeor differs by about 165 calories. It only affects the estimate, nothing else.</div></div>
     <div class="row2">${f("Age","age",1)}
       <div class="field"><label>Weight</label><div class="unit">
         <input type="number" step="0.1" inputmode="decimal" value="${P.unitKg?r1(P.weightLb/2.2046):P.weightLb}"
@@ -1671,6 +1857,7 @@ document.addEventListener("click",async ev=>{
   if(a==="addfood"){
     const fd=fdOf(v), q=document.getElementById("q_"+v), g=+((q&&q.value)||0);
     if(!fd||!(g>0)){ toast("Enter an amount"); return; }
+    if(blocked(fd)){ toast("That is on your allergy list"); return; }
     const mc=itemMac({f:v,g},1);
     getDay(d,true).f.push({n:`${fd.u==="ea"?g+"× ":Math.round(g)+"g "}${fd.n}`,k:mc.k,p:mc.p,c:mc.c,f:mc.f,mid:null,t:nowT()});
     saveDay(d); UI.foodQ=""; toast("Added — later meals re-cut"); render(); return;
@@ -1706,6 +1893,14 @@ document.addEventListener("click",async ev=>{
     P.supps=P.supps||[];
     const i=P.supps.indexOf(v);
     if(i>-1) P.supps.splice(i,1); else P.supps.push(v);
+    queue("p"); render(); return;
+  }
+  if(a==="sex"){ P.sex=v; queue("p"); render(); return; }
+  if(a==="aller"){
+    P.allergens=P.allergens||[];
+    const i=P.allergens.indexOf(v);
+    if(i>-1) P.allergens.splice(i,1); else P.allergens.push(v);
+    P.allerSet=1; P.variant={};                 // reset variant choices so nothing unsafe stays selected
     queue("p"); render(); return;
   }
   if(a==="phase"){ P.phase=v; queue("p"); render(); return; }
@@ -1811,6 +2006,7 @@ async function claimPersistence(){
   P.sched={...DEF.sched,...(P.sched||{})};
   P.variant=P.variant||{}; P.inc=P.inc||{}; P.prio=P.prio||[];
   if(stored&&(!stored.v||stored.v<2)){ P.age=40; P.activity=1.40; P.v=2; queue("p"); }
+  if(stored&&stored.v<3&&!stored.allergens){ P.allergens=["gluten","dairy"]; P.allerSet=1; P.v=3; queue("p"); }
   LF=(await sget("fit:lifts"))||{};
   PR=(await sget("fit:prs"))||{};
   CF=(await sget("fit:foods"))||[];
