@@ -259,51 +259,68 @@ h2{font-size:19px;text-transform:uppercase;letter-spacing:.05em}
 <script>
 /* ============================ EXERCISE LIBRARY ============================ */
 const EX={
- smith_inc:{n:"Smith Incline Press",m:"Upper chest",i:10,cue:"Bench at 30°. Bar to just below collarbone, 1s pause, drive. Elbows tucked to ~50°.",alt:"Incline DB press / Incline machine press"},
- db_flat:{n:"Flat DB Press",m:"Chest",i:10,cue:"Slight arch, shoulder blades pinned. Lower until DBs level with chest, no bounce.",alt:"Smith flat press / Machine chest press"},
- machine_press:{n:"Machine Chest Press",m:"Chest",i:10,cue:"Seat so handles sit at nipple line. Full stretch at back, hard squeeze at lockout.",alt:"Weighted dip / Cable press"},
- inc_db:{n:"Incline DB Press",m:"Upper chest",i:10,cue:"30-35°. Control the negative for 2s. Stop 1 rep shy of failure on first two sets.",alt:"Smith incline / Incline machine"},
- pec_deck:{n:"Pec Deck",m:"Chest",i:10,cue:"Chest up, elbows slightly soft. Squeeze 1s in the middle. Let it stretch at the back.",alt:"Cable fly / Machine fly"},
- csr:{n:"Chest-Supported Row",m:"Mid back",i:10,cue:"Chest glued to pad. Pull to lower ribs, elbows past torso, 1s squeeze.",alt:"T-bar row / Seated cable row"},
- csr_wide:{n:"Wide-Grip Machine Row",m:"Upper back",i:10,cue:"Wide overhand grip, pull toward upper stomach. Think elbows out and back at 45°.",alt:"Seated cable row wide bar"},
- pulldown_n:{n:"Neutral-Grip Pulldown",m:"Lats",i:10,cue:"Lean back 15°, drive elbows down to your hips. Full stretch at the top, no yanking.",alt:"Neutral chin / Machine pulldown"},
- pullup:{n:"Pull-Up (assisted or weighted)",m:"Lats",i:5,cue:"Dead hang start. If you can't hit the low rep target clean, use the assist machine.",alt:"Wide-grip pulldown"},
- lat_cable:{n:"Cable Lateral Raise",m:"Side delts",i:5,cue:"One arm, cable behind you. Lead with the elbow to shoulder height. Slow negative.",alt:"DB lateral raise / Machine lateral"},
- ohp:{n:"Seated Smith Overhead Press",m:"Shoulders",i:10,cue:"Bench upright, bar to chin level. Ribs down, don't lean back. Press slightly back.",alt:"Seated DB press / Machine shoulder press"},
- rear_delt:{n:"Rear Delt Fly",m:"Rear delts",i:10,cue:"Machine or cable. Elbows high, no shrugging. Pause at the back of every rep.",alt:"Reverse pec deck / Cable rear delt"},
- face_pull:{n:"Face Pull",m:"Rear delts / cuff",i:5,cue:"Rope to eye level. Pull to forehead, thumbs back, external rotate at the end.",alt:"Band pull-apart"},
- inc_curl:{n:"Incline DB Curl",m:"Biceps",i:10,cue:"Bench at 60°, arms hanging behind you. Full stretch at the bottom — that's the whole point.",alt:"Bayesian cable curl"},
- cable_curl:{n:"Cable Curl (straight bar)",m:"Biceps",i:5,cue:"Elbows pinned to your sides. No swing. Squeeze 1s at the top.",alt:"EZ bar curl / Machine curl"},
- hammer:{n:"Hammer Curl",m:"Brachialis / forearm",i:10,cue:"Neutral grip, DB or rope. Slow 2s down. Don't let the shoulders travel forward.",alt:"Rope hammer curl"},
- ohtri:{n:"Overhead Cable Triceps Ext.",m:"Long head triceps",i:5,cue:"Face away, rope overhead. Get a deep stretch behind the head before extending.",alt:"Overhead DB extension"},
- pushdown:{n:"Triceps Pushdown",m:"Triceps",i:5,cue:"Elbows locked at your ribs. Full lockout, control the return to 90°.",alt:"Machine dip / V-bar pushdown"},
- dip_mach:{n:"Machine Dip",m:"Triceps / lower chest",i:10,cue:"Torso upright for triceps bias. Full lockout each rep.",alt:"Bench dip / Close-grip smith press"},
- wrist:{n:"Cable Wrist Curl",m:"Forearms",i:5,cue:"Forearms on a bench, only the hands move. High reps, burn is the goal.",alt:"DB wrist curl"},
- shrug:{n:"Smith Shrug",m:"Traps",i:10,cue:"Straight up, 2s hold at the top. No rolling.",alt:"DB shrug / Trap bar shrug"},
- hack:{n:"Hack Squat Machine",m:"Quads",i:20,cue:"Feet mid-platform, shoulder width. Descend to just below parallel under control, drive through mid-foot.",alt:"Smith machine squat / Pendulum squat"},
- smith_sq:{n:"Smith Machine Squat",m:"Quads",i:10,cue:"Feet a step forward of the bar. Sit down, not back. Below parallel, no bounce.",alt:"Hack squat / V-squat machine"},
- leg_press:{n:"Leg Press",m:"Quads / glutes",i:20,cue:"Feet mid-platform, shoulder width. Knees to ~90° or deeper. Don't lock out hard.",alt:"Horizontal leg press"},
- leg_press_hi:{n:"Leg Press (feet high & wide)",m:"Glutes / hams",i:20,cue:"Feet high on the platform, toes slightly out. Deep range, push through heels.",alt:"Belt squat / Glute press machine"},
- leg_ext:{n:"Leg Extension",m:"Quads",i:10,cue:"Squeeze hard at the top for 1s. Last set: rest-pause to failure.",alt:"Sissy squat"},
- seated_curl:{n:"Seated Leg Curl",m:"Hamstrings",i:10,cue:"Hips strapped down. 3s negative every rep. Best hamstring builder in the gym.",alt:"Lying leg curl"},
- lying_curl:{n:"Lying Leg Curl",m:"Hamstrings",i:10,cue:"Hips pressed into the pad. Don't let your butt rise. Pause at peak contraction.",alt:"Seated leg curl / Nordic curl"},
- hip_thrust:{n:"Smith Hip Thrust",m:"Glutes",i:10,cue:"Shoulder blades on the bench, chin tucked. Full lockout, 1s squeeze, ribs down.",alt:"Glute drive machine / Cable pull-through"},
- back_ext:{n:"45° Back Extension",m:"Glutes / low back",i:5,cue:"Round the upper back slightly, hinge at the hips, squeeze glutes to finish. Hold a plate at chest.",alt:"Reverse hyper / Hyperextension bench"},
- bss:{n:"Bulgarian Split Squat (Smith)",m:"Quads / glutes",i:10,cue:"Rear foot on a bench, front foot far enough forward that the knee stays behind the toes.",alt:"Reverse lunge / Walking lunge"},
- lunge:{n:"Walking Lunge",m:"Quads / glutes",i:10,cue:"Long stride, torso upright, back knee to just off the floor. Count reps per leg.",alt:"Reverse lunge / Step-up"},
- calf_st:{n:"Standing Calf Raise",m:"Calves",i:10,cue:"Full stretch at the bottom, 2s pause. Full contraction at the top, 1s pause. No bouncing.",alt:"Smith calf raise / Leg press calf raise"},
- calf_seat:{n:"Seated Calf Raise",m:"Soleus",i:10,cue:"Knees bent 90°. Slow and full range. High reps — soleus needs volume.",alt:"Leg press calf raise (knees bent)"},
- hang_raise:{n:"Hanging Leg Raise",m:"Abs",i:5,cue:"Curl the pelvis up, don't just swing the legs. Knees bent is fine to start.",alt:"Captain's chair raise"},
- cable_crunch:{n:"Cable Crunch",m:"Abs",i:10,cue:"Kneel, rope at your head. Crunch the ribs to the pelvis. Hips stay still.",alt:"Machine crunch / Weighted decline crunch"},
- ab_wheel:{n:"Ab Wheel Rollout",m:"Abs",i:5,cue:"Ribs down, glutes squeezed. Only roll as far as you can hold a flat back.",alt:"Long-lever plank / Cable crunch"},
- pallof:{n:"Cable Woodchop",m:"Obliques / core",i:5,cue:"Rotate through the torso, arms stay straight. Controlled both directions.",alt:"Pallof press"},
- carry:{n:"Farmer Carry",m:"Grip / core / traps",i:10,cue:"Heaviest DBs you can hold. Tall posture, short quick steps. Time-based set.",alt:"Trap bar carry / Suitcase carry"},
-goblet:{n:"Goblet Squat",m:"Quads / glutes",i:5,cue:"Hold a dumbbell at your chest. Sit straight down between your feet, elbows inside your knees. Chest tall the whole way.",alt:"Hack squat / Leg press"},
- db_rdl:{n:"Dumbbell Romanian Deadlift",m:"Hamstrings / glutes",i:10,cue:"Soft knees, push the hips back, dumbbells brush your thighs. Stop when you feel the stretch, not when you reach the floor.",alt:"Machine hip hinge / Back extension"},
- step_up:{n:"Step-Up",m:"Quads / glutes",i:10,cue:"Knee-height box. Drive through the top foot, do not push off the bottom one. Count reps per leg.",alt:"Reverse lunge / Split squat"},
- plank:{n:"Plank",m:"Core",i:5,cue:"Forearms down, ribs pulled toward hips, glutes squeezed. Time-based set, not reps.",alt:"Dead bug / Ab wheel"},
- glute_mach:{n:"Glute Machine / Cable Kickback",m:"Glutes",i:10,cue:"One leg at a time. Squeeze at the top for a second, control the return. No arching the low back.",alt:"Hip thrust / Cable pull-through"},
- neck:{n:"Neck Curl / Extension",m:"Neck",i:5,cue:"Optional but it changes how you look in a t-shirt. Light plate, very slow, high reps.",alt:"Neck harness"}
+ smith_inc:{n:"Smith Incline Press",m:"Upper chest",pat:"push_h",i:10,cue:"Bench at 30°. Bar to just below collarbone, 1s pause, drive. Elbows tucked to ~50°.",alt:"Incline DB press / Incline machine press"},
+ db_flat:{n:"Flat DB Press",m:"Chest",pat:"push_h",i:10,cue:"Slight arch, shoulder blades pinned. Lower until DBs level with chest, no bounce.",alt:"Smith flat press / Machine chest press"},
+ machine_press:{n:"Machine Chest Press",m:"Chest",pat:"push_h",i:10,cue:"Seat so handles sit at nipple line. Full stretch at back, hard squeeze at lockout.",alt:"Weighted dip / Cable press"},
+ inc_db:{n:"Incline DB Press",m:"Upper chest",pat:"push_h",i:10,cue:"30-35°. Control the negative for 2s. Stop 1 rep shy of failure on first two sets.",alt:"Smith incline / Incline machine"},
+ pec_deck:{n:"Pec Deck",m:"Chest",pat:"fly",i:10,cue:"Chest up, elbows slightly soft. Squeeze 1s in the middle. Let it stretch at the back.",alt:"Cable fly / Machine fly"},
+ csr:{n:"Chest-Supported Row",m:"Mid back",pat:"pull_h",i:10,cue:"Chest glued to pad. Pull to lower ribs, elbows past torso, 1s squeeze.",alt:"T-bar row / Seated cable row"},
+ csr_wide:{n:"Wide-Grip Machine Row",m:"Upper back",pat:"pull_h",i:10,cue:"Wide overhand grip, pull toward upper stomach. Think elbows out and back at 45°.",alt:"Seated cable row wide bar"},
+ pulldown_n:{n:"Neutral-Grip Pulldown",m:"Lats",pat:"pull_v",i:10,cue:"Lean back 15°, drive elbows down to your hips. Full stretch at the top, no yanking.",alt:"Neutral chin / Machine pulldown"},
+ pullup:{n:"Pull-Up (assisted or weighted)",m:"Lats",pat:"pull_v",i:5,cue:"Dead hang start. If you can't hit the low rep target clean, use the assist machine.",alt:"Wide-grip pulldown"},
+ lat_cable:{n:"Cable Lateral Raise",m:"Side delts",pat:"latraise",i:5,cue:"One arm, cable behind you. Lead with the elbow to shoulder height. Slow negative.",alt:"DB lateral raise / Machine lateral"},
+ ohp:{n:"Seated Smith Overhead Press",m:"Shoulders",pat:"push_v",i:10,cue:"Bench upright, bar to chin level. Ribs down, don't lean back. Press slightly back.",alt:"Seated DB press / Machine shoulder press"},
+ rear_delt:{n:"Rear Delt Fly",m:"Rear delts",pat:"reardelt",i:10,cue:"Machine or cable. Elbows high, no shrugging. Pause at the back of every rep.",alt:"Reverse pec deck / Cable rear delt"},
+ face_pull:{n:"Face Pull",m:"Rear delts / cuff",pat:"reardelt",i:5,cue:"Rope to eye level. Pull to forehead, thumbs back, external rotate at the end.",alt:"Band pull-apart"},
+ inc_curl:{n:"Incline DB Curl",m:"Biceps",pat:"curl",i:10,cue:"Bench at 60°, arms hanging behind you. Full stretch at the bottom — that's the whole point.",alt:"Bayesian cable curl"},
+ cable_curl:{n:"Cable Curl (straight bar)",m:"Biceps",pat:"curl",i:5,cue:"Elbows pinned to your sides. No swing. Squeeze 1s at the top.",alt:"EZ bar curl / Machine curl"},
+ hammer:{n:"Hammer Curl",m:"Brachialis / forearm",pat:"curl",i:10,cue:"Neutral grip, DB or rope. Slow 2s down. Don't let the shoulders travel forward.",alt:"Rope hammer curl"},
+ ohtri:{n:"Overhead Cable Triceps Ext.",m:"Long head triceps",pat:"tri",i:5,cue:"Face away, rope overhead. Get a deep stretch behind the head before extending.",alt:"Overhead DB extension"},
+ pushdown:{n:"Triceps Pushdown",m:"Triceps",pat:"tri",i:5,cue:"Elbows locked at your ribs. Full lockout, control the return to 90°.",alt:"Machine dip / V-bar pushdown"},
+ dip_mach:{n:"Machine Dip",m:"Triceps / lower chest",pat:"tri",i:10,cue:"Torso upright for triceps bias. Full lockout each rep.",alt:"Bench dip / Close-grip smith press"},
+ wrist:{n:"Cable Wrist Curl",m:"Forearms",pat:"forearm",i:5,cue:"Forearms on a bench, only the hands move. High reps, burn is the goal.",alt:"DB wrist curl"},
+ shrug:{n:"Smith Shrug",m:"Traps",pat:"traps",i:10,cue:"Straight up, 2s hold at the top. No rolling.",alt:"DB shrug / Trap bar shrug"},
+ hack:{n:"Hack Squat Machine",m:"Quads",pat:"squat",i:20,cue:"Feet mid-platform, shoulder width. Descend to just below parallel under control, drive through mid-foot.",alt:"Smith machine squat / Pendulum squat"},
+ smith_sq:{n:"Smith Machine Squat",m:"Quads",pat:"squat",i:10,cue:"Feet a step forward of the bar. Sit down, not back. Below parallel, no bounce.",alt:"Hack squat / V-squat machine"},
+ leg_press:{n:"Leg Press",m:"Quads / glutes",pat:"squat",i:20,cue:"Feet mid-platform, shoulder width. Knees to ~90° or deeper. Don't lock out hard.",alt:"Horizontal leg press"},
+ leg_press_hi:{n:"Leg Press (feet high & wide)",m:"Glutes / hams",pat:"squat",i:20,cue:"Feet high on the platform, toes slightly out. Deep range, push through heels.",alt:"Belt squat / Glute press machine"},
+ leg_ext:{n:"Leg Extension",m:"Quads",pat:"kneeext",i:10,cue:"Squeeze hard at the top for 1s. Last set: rest-pause to failure.",alt:"Sissy squat"},
+ seated_curl:{n:"Seated Leg Curl",m:"Hamstrings",pat:"kneeflex",i:10,cue:"Hips strapped down. 3s negative every rep. Best hamstring builder in the gym.",alt:"Lying leg curl"},
+ lying_curl:{n:"Lying Leg Curl",m:"Hamstrings",pat:"kneeflex",i:10,cue:"Hips pressed into the pad. Don't let your butt rise. Pause at peak contraction.",alt:"Seated leg curl / Nordic curl"},
+ hip_thrust:{n:"Smith Hip Thrust",m:"Glutes",pat:"hinge",i:10,cue:"Shoulder blades on the bench, chin tucked. Full lockout, 1s squeeze, ribs down.",alt:"Glute drive machine / Cable pull-through"},
+ back_ext:{n:"45° Back Extension",m:"Glutes / low back",pat:"hinge",i:5,cue:"Round the upper back slightly, hinge at the hips, squeeze glutes to finish. Hold a plate at chest.",alt:"Reverse hyper / Hyperextension bench"},
+ bss:{n:"Bulgarian Split Squat (Smith)",m:"Quads / glutes",pat:"lunge",i:10,cue:"Rear foot on a bench, front foot far enough forward that the knee stays behind the toes.",alt:"Reverse lunge / Walking lunge"},
+ lunge:{n:"Walking Lunge",m:"Quads / glutes",pat:"lunge",i:10,cue:"Long stride, torso upright, back knee to just off the floor. Count reps per leg.",alt:"Reverse lunge / Step-up"},
+ calf_st:{n:"Standing Calf Raise",m:"Calves",pat:"calf",i:10,cue:"Full stretch at the bottom, 2s pause. Full contraction at the top, 1s pause. No bouncing.",alt:"Smith calf raise / Leg press calf raise"},
+ calf_seat:{n:"Seated Calf Raise",m:"Soleus",pat:"calf",i:10,cue:"Knees bent 90°. Slow and full range. High reps — soleus needs volume.",alt:"Leg press calf raise (knees bent)"},
+ hang_raise:{n:"Hanging Leg Raise",m:"Abs",pat:"core",i:5,cue:"Curl the pelvis up, don't just swing the legs. Knees bent is fine to start.",alt:"Captain's chair raise"},
+ cable_crunch:{n:"Cable Crunch",m:"Abs",pat:"core",i:10,cue:"Kneel, rope at your head. Crunch the ribs to the pelvis. Hips stay still.",alt:"Machine crunch / Weighted decline crunch"},
+ ab_wheel:{n:"Ab Wheel Rollout",m:"Abs",pat:"core",i:5,cue:"Ribs down, glutes squeezed. Only roll as far as you can hold a flat back.",alt:"Long-lever plank / Cable crunch"},
+ pallof:{n:"Cable Woodchop",m:"Obliques / core",pat:"core",i:5,cue:"Rotate through the torso, arms stay straight. Controlled both directions.",alt:"Pallof press"},
+ carry:{n:"Farmer Carry",m:"Grip / core / traps",pat:"carry",i:10,cue:"Heaviest DBs you can hold. Tall posture, short quick steps. Time-based set.",alt:"Trap bar carry / Suitcase carry"},
+goblet:{n:"Goblet Squat",m:"Quads / glutes",pat:"squat",i:5,cue:"Hold a dumbbell at your chest. Sit straight down between your feet, elbows inside your knees. Chest tall the whole way.",alt:"Hack squat / Leg press"},
+ db_rdl:{n:"Dumbbell Romanian Deadlift",m:"Hamstrings / glutes",pat:"hinge",i:10,cue:"Soft knees, push the hips back, dumbbells brush your thighs. Stop when you feel the stretch, not when you reach the floor.",alt:"Machine hip hinge / Back extension"},
+ step_up:{n:"Step-Up",m:"Quads / glutes",pat:"lunge",i:10,cue:"Knee-height box. Drive through the top foot, do not push off the bottom one. Count reps per leg.",alt:"Reverse lunge / Split squat"},
+ plank:{n:"Plank",m:"Core",pat:"core",i:5,cue:"Forearms down, ribs pulled toward hips, glutes squeezed. Time-based set, not reps.",alt:"Dead bug / Ab wheel"},
+ glute_mach:{n:"Glute Machine / Cable Kickback",m:"Glutes",pat:"hinge",i:10,cue:"One leg at a time. Squeeze at the top for a second, control the return. No arching the low back.",alt:"Hip thrust / Cable pull-through"},
+bb_squat:{n:"Barbell Back Squat",m:"Quads / glutes",pat:"squat",i:10,cue:"Bar on the rear delts, brace hard before you unrack. Sit between your hips to depth, drive the whole foot through the floor.",alt:"Front squat / Hack squat"},
+ front_squat:{n:"Front Squat",m:"Quads",pat:"squat",i:10,cue:"Elbows high, bar resting on the front delts, not the hands. Torso stays vertical — the moment the elbows drop, the bar follows.",alt:"Back squat / Hack squat"},
+ bb_bench:{n:"Barbell Bench Press",m:"Chest",pat:"push_h",i:10,cue:"Shoulder blades pinned down and back, feet planted. Bar to the lower chest, elbows about 45 degrees, drive back toward your face.",alt:"Smith incline / DB press"},
+ bb_dead:{n:"Conventional Deadlift",m:"Posterior chain",pat:"hinge",i:10,cue:"Bar over midfoot, lats engaged, hips find their own height. Push the floor away rather than pulling the bar up.",alt:"Trap bar deadlift / Hip thrust"},
+ trap_dead:{n:"Trap Bar Deadlift",m:"Posterior chain / quads",pat:"hinge",i:10,cue:"Easier on the low back than a straight bar and nearly as productive. Stand tall at the top, no leaning back.",alt:"Conventional deadlift / Hip thrust"},
+ bb_row:{n:"Barbell Row",m:"Mid back",pat:"pull_h",i:10,cue:"Hinge to about 45 degrees and stay there. Pull to the lower ribs, no heaving with the hips.",alt:"Chest-supported row / T-bar row"},
+ bb_ohp:{n:"Standing Barbell Press",m:"Shoulders",pat:"push_v",i:5,cue:"Squeeze glutes, ribs down, press the bar past your face then bring the head through at lockout.",alt:"Seated Smith press / DB press"},
+pause_squat:{n:"Pause Squat",m:"Quads",pat:"squat",i:10,cue:"Two full seconds motionless at the bottom, then drive. Teaches you to hold position out of the hole.",alt:"Front squat / Tempo squat"},
+ cg_bench:{n:"Close-Grip Bench Press",m:"Triceps / chest",pat:"push_h",i:10,cue:"Hands about shoulder width, elbows tucked. Builds the lockout on your competition bench.",alt:"Board press / Dip"},
+ deficit_dl:{n:"Deficit Deadlift",m:"Posterior chain",pat:"hinge",i:10,cue:"Stand on a 1-2 inch plate. Longer range off the floor, which is where most pulls die.",alt:"Conventional deadlift / Block pull"},
+ cable_fly:{n:"Cable Fly",m:"Chest",pat:"fly",i:5,cue:"Slight elbow bend held constant. Bring the hands together and squeeze, let the chest stretch at the back.",alt:"Pec deck / DB fly"},
+ db_lateral:{n:"Dumbbell Lateral Raise",m:"Side delts",pat:"latraise",i:10,cue:"Lead with the elbow to shoulder height, thumbs level or slightly down. Slow on the way back.",alt:"Cable lateral / Machine lateral"},
+ mach_lateral:{n:"Machine Lateral Raise",m:"Side delts",pat:"latraise",i:10,cue:"Pads on the outer arm, not the wrist. Easiest lateral to feel if dumbbells never click.",alt:"Cable lateral / DB lateral"},
+ sissy:{n:"Sissy Squat",m:"Quads",pat:"kneeext",i:5,cue:"Knees travel forward, hips stay extended. Brutal quad stretch — start bodyweight and assisted.",alt:"Leg extension"},
+ db_shrug:{n:"Dumbbell Shrug",m:"Traps",pat:"traps",i:10,cue:"Straight up, two-second hold at the top. No rolling.",alt:"Smith shrug / Trap bar shrug"},
+ suitcase:{n:"Suitcase Carry",m:"Obliques / grip",pat:"carry",i:5,cue:"One dumbbell, one side. Stay perfectly upright — the anti-lean is the whole exercise.",alt:"Farmer carry"},
+ rev_curl:{n:"Reverse Curl",m:"Forearms / brachialis",pat:"forearm",i:5,cue:"Overhand grip, elbows pinned. Light weight, this is a forearm exercise not a biceps one.",alt:"Wrist curl / Hammer curl"},
+ neck:{n:"Neck Curl / Extension",m:"Neck",pat:"neck",i:5,cue:"Optional but it changes how you look in a t-shirt. Light plate, very slow, high reps.",alt:"Neck harness"}
 };
 
 /* ============================ TRAINING DAYS ============================
@@ -379,9 +396,40 @@ DAYS.fullC={n:"Full Body C",sub:"Glutes, row, carry",color:"var(--blue)",b:[
   {e:"glute_mach",s:2,lo:12,hi:15,r:70,t:"P",note:"per leg"},
   {e:"calf_st",s:2,lo:10,hi:15,r:60,t:"P"},
   {e:"hang_raise",s:2,lo:10,hi:15,r:60,t:"P"}]};
+/* Powerbuilding: the three lifts trained heavy, size work bolted on behind them. */
+DAYS.sqDay={n:"Squat Day",sub:"Heavy squat, then legs",color:"var(--red)",b:[
+  {e:"bb_squat",s:4,lo:3,hi:5,r:300,t:"S"},
+  {e:"pause_squat",s:3,lo:5,hi:8,r:180,t:"H"},
+  {e:"leg_press",s:3,lo:8,hi:12,r:150,t:"H"},
+  {e:"lying_curl",s:3,lo:10,hi:15,r:105,t:"H"},
+  {e:"calf_st",s:3,lo:10,hi:15,r:75,t:"P"},
+  {e:"hang_raise",s:3,lo:10,hi:15,r:70,t:"P"}]};
+DAYS.bnDay={n:"Bench Day",sub:"Heavy bench, then upper",color:"var(--red)",b:[
+  {e:"bb_bench",s:4,lo:3,hi:5,r:300,t:"S"},
+  {e:"cg_bench",s:3,lo:5,hi:8,r:180,t:"H"},
+  {e:"bb_row",s:4,lo:6,hi:10,r:150,t:"H"},
+  {e:"inc_db",s:3,lo:8,hi:12,r:120,t:"H"},
+  {e:"lat_cable",s:3,lo:12,hi:20,r:65,t:"P"},
+  {e:"pushdown",s:3,lo:10,hi:15,r:70,t:"P"}]};
+DAYS.dlDay={n:"Deadlift Day",sub:"Heavy pull, then back",color:"var(--red)",b:[
+  {e:"bb_dead",s:4,lo:2,hi:4,r:300,t:"S"},
+  {e:"deficit_dl",s:3,lo:5,hi:8,r:180,t:"H"},
+  {e:"csr",s:3,lo:8,hi:12,r:135,t:"H"},
+  {e:"pulldown_n",s:3,lo:10,hi:15,r:105,t:"H"},
+  {e:"back_ext",s:3,lo:12,hi:15,r:90,t:"H"},
+  {e:"cable_crunch",s:3,lo:12,hi:15,r:60,t:"P"}]};
+DAYS.szDay={n:"Size Day",sub:"Volume work for everything else",color:"var(--blue)",b:[
+  {e:"bb_ohp",s:4,lo:5,hi:8,r:180,t:"S"},
+  {e:"pullup",s:4,lo:8,hi:12,r:135,t:"H"},
+  {e:"machine_press",s:3,lo:10,hi:14,r:105,t:"H"},
+  {e:"csr_wide",s:3,lo:10,hi:14,r:105,t:"H"},
+  {e:"rear_delt",s:3,lo:15,hi:20,r:60,t:"P"},
+  {e:"inc_curl",s:3,lo:8,hi:12,r:80,t:"H"},
+  {e:"ohtri",s:3,lo:10,hi:14,r:80,t:"H"}]};
+
 DAYS.cond={n:"Conditioning",sub:"Cardio and mobility",color:"var(--green)",b:[]};
 
-const DAYKEYS=["upperA","lowerA","upperB","lowerB","arms","fullA","fullB","fullC","cond","rest"];
+const DAYKEYS=["upperA","lowerA","upperB","lowerB","arms","fullA","fullB","fullC","sqDay","bnDay","dlDay","szDay","cond","rest"];
 
 /* ============================ PROGRAM TEMPLATES ============================
    Each sets the whole week at once. Every day stays editable afterwards. */
@@ -395,7 +443,10 @@ const PROGRAMS={
  fullbody4:{n:"Full Body ×4",d:"Four full-body days. More total practice than Foundations without the jump to a split.",
    lvl:"New to lifting, more time",
    s:{0:"rest",1:"fullA",2:"fullB",3:"cond",4:"fullC",5:"fullA",6:"rest"}},
- minimal:{n:"Three Days",d:"Three sessions a week and nothing else required. The honest minimum that still builds muscle.",
+powerbuilding:{n:"Powerbuilding",d:"Squat, bench and deadlift trained heavy at 2-5 reps with five-minute rests, then hypertrophy work behind each one. Built for strength and size together, not for peaking to a meet.",
+   lvl:"Barbell gym, strength focus",
+   s:{0:"rest",1:"sqDay",2:"bnDay",3:"rest",4:"dlDay",5:"szDay",6:"rest"}},
+minimal:{n:"Three Days",d:"Three sessions a week and nothing else required. The honest minimum that still builds muscle.",
    lvl:"Any level, limited time",
    s:{0:"rest",1:"fullA",2:"rest",3:"fullB",4:"rest",5:"fullC",6:"rest"}}
 };
@@ -408,10 +459,10 @@ const LEVELS={
 };
 
 const GOALS={
- health:{n:"General fitness",phase:"maint",d:"Hold weight, build strength and conditioning. Protein stays high, calories stay level."},
- muscle:{n:"Build muscle",phase:"lean",d:"A small surplus so training has something to build with."},
- fat:{n:"Lose fat",phase:"cut",d:"A deficit with protein and training held high, so what you lose is fat."},
- strength:{n:"Get stronger",phase:"maint",d:"Maintenance calories, heavier work, longer rests."}
+ health:{n:"General fitness",phase:"maint",rec:"foundations",d:"Holds your weight. Pairs with Foundations or Upper / Lower."},
+ muscle:{n:"Build muscle",phase:"lean",rec:"upperlower",d:"A small surplus so training has something to build with. Pairs with Upper / Lower."},
+ fat:{n:"Lose fat",phase:"cut",rec:"upperlower",d:"A deficit with protein and training held high, so what you lose is fat."},
+ strength:{n:"Get stronger",phase:"maint",rec:"powerbuilding",d:"Maintenance calories. The heavy low-rep work and long rests live in the Powerbuilding program — pick it below or this goal only changes your calories."}
 };
 
 /* Week character inside a 6-week mesocycle */
@@ -595,7 +646,7 @@ const CARDIO={
    d:"Only if the clock allows. Upper days can take cardio right after lifting with no cost to your legs."},
  upperB:{n:"Incline walk finisher",min:10,opt:true,tgt:"12% grade · 3.0-3.2 mph",
    d:"Same as Upper A. Skip it without guilt if you are running late — the rest-day session is the one that matters."},
- lowerA:null, lowerB:null, fullA:null, fullB:null, fullC:null,
+ lowerA:null, lowerB:null, fullA:null, fullB:null, fullC:null, sqDay:null, bnDay:null, dlDay:null, szDay:null,
  arms:{n:"Incline intervals",min:15,opt:false,tgt:"6 rounds · 60s hard / 90s easy",
    d:"60 seconds at 15% grade and 4.0 mph, then 90 seconds at 8% and 2.8 mph. Six rounds. Walking, never running — the payoff is identical and your knees keep working."},
  cond:{n:"Zone 2 walk & mobility",min:35,opt:false,tgt:"10-15% grade · conversational",
@@ -656,6 +707,7 @@ const PHASES={
 const DEF={
   v:3, name:"", sex:"m", age:35, heightIn:70, weightLb:180, activity:1.40, firstRun:1,
   level:"some", goal:"health", program:"upperlower", allergens:[], allerSet:0,
+  swap:{}, hidden:[],
   phase:"regain", kcalTweak:0, protPerLb:1.0, fatPerLb:0.42,
   start:null, unitKg:false,
   sched:{0:"rest",1:"upperA",2:"lowerA",3:"rest",4:"upperB",5:"lowerB",6:"arms"}, steps:7000, inc:{}, prio:[], supps:["creatine"], waterGoal:0, lastExport:0,
@@ -681,8 +733,7 @@ const dspIn=v=>{if(v===''||v==null||isNaN(v))return '';return Math.round((P.unit
 const toIn=v=>P.unitKg?v/2.54:v;
 const dsp=v=>{if(v===''||v==null||isNaN(v))return '';const n=P.unitKg?v/2.2046:v;return Math.round(n*10)/10;};
 
-/* ============================ LOCAL STORAGE ============================
-   Everything lives in this phone's own browser storage. No server, no account. */
+/* ============================ LOCAL STORAGE ============================ */
 const STORE={
   async get(k){ const v=localStorage.getItem(k); return v==null?null:{key:k,value:v}; },
   async set(k,v){ localStorage.setItem(k,v); return {key:k,value:v}; },
@@ -814,10 +865,35 @@ function dayKeyFor(d){
   if(ov) return ov;
   return P.sched[parseISO(d).getDay()]||"rest";
 }
+
+/* ============================ EXERCISE PREFERENCES ============================
+   Anything you cannot do, or simply never feel, gets swapped for a movement that
+   trains the same pattern. The program shape never changes — only the tool. */
+function isHidden(e){ return (P.hidden||[]).indexOf(e)>-1; }
+function altsFor(exId,taken){
+  const src=EX[exId]; if(!src) return [];
+  return Object.keys(EX).filter(k=>k!==exId && EX[k].pat===src.pat && !isHidden(k)
+    && !(taken||[]).includes(k));
+}
+function resolveEx(exId,taken){
+  const s=(P.swap||{})[exId];
+  if(s && EX[s] && !isHidden(s)) return s;             // your saved choice wins
+  if(!isHidden(exId)) return exId;
+  const a=altsFor(exId,taken);
+  return a.length?a[0]:exId;                            // nothing left: keep the original
+}
 function blocksFor(key,d){
-  const D=DAYS[key]||DAYS.rest; const out=D.b.slice();
+  const D=DAYS[key]||DAYS.rest;
+  const taken=[], out=[];
+  D.b.forEach(b=>{
+    const e=resolveEx(b.e,taken);
+    if(taken.includes(e)) return;                       // a swap collided with a lift already here
+    taken.push(e);
+    out.push(e===b.e?b:{...b,e,from:b.e});
+  });
   (P.prio||[]).forEach(pk=>{ const pr=PRIO[pk]; if(!pr||pr.d.indexOf(key)<0) return;
-    pr.b.forEach(x=>{ if(!out.some(y=>y.e===x.e)) out.push({...x,prio:pk}); }); });
+    pr.b.forEach(x=>{ const e=resolveEx(x.e,taken);
+      if(!out.some(y=>y.e===e)){ taken.push(e); out.push({...x,e,prio:pk,from:e===x.e?undefined:x.e}); } }); });
   return out;
 }
 function estMin(key,d){
@@ -1206,8 +1282,10 @@ function vTrain(){
         <div class="lastline">${last?`<b>${pretty(last.d)}:</b> ${last.sets.map(s=>`${dsp(s.w)}×${s.r}`).join("  ")}`:"<b>No history yet.</b>"}</div>
         <div class="collabel"><div></div><div>Weight</div><div>Reps</div><div></div></div>
         ${rows}
-        <div class="tiny" style="margin-top:9px">Swap: ${esc(X.alt)}</div>
-      </div></div>`;}).join("");
+        <div class="rowx" style="margin-top:11px">
+          <div class="tiny" style="flex:1">${b.from?`Swapped in for ${esc(EX[b.from].n)}. `:""}Targets ${esc(X.m)}</div>
+          <button class="chip sm" data-act="swapopen" data-v="${b.e}">Swap</button></div>
+      </div></div>${UI.swapping===b.e?swapPicker(b.e):""}`;}).join("");
 
   return `
    <div class="card" style="border-color:${D.color}33">
@@ -1224,6 +1302,23 @@ function vTrain(){
    <button class="btn ${day.w&&day.w.done?"":"pri"}" data-act="finish">${day.w&&day.w.done?"Session logged ✓":"Finish session"}</button>
    <div style="height:11px"></div>
    ${day.w&&day.w.done?cardNext(d,key):""}${cardCardio(d,day)}${cardWeighIn(d,day)}`;
+}
+function swapPicker(exId,ctx){
+  const src=EX[exId]; if(!src) return "";
+  const cur=(P.swap||{})[exId]||exId;
+  const opts=[exId,...altsFor(exId,[])].filter((v,i,a)=>a.indexOf(v)===i);
+  return `<div class="card" style="border-color:var(--blue);margin-top:-4px">
+    <div class="eyebrow" style="color:var(--blue);margin-bottom:4px">Swap ${esc(src.n)}</div>
+    <div class="tiny" style="margin-bottom:11px">Same movement pattern, so the program still works. Your choice is saved and used every time this lift comes up.</div>
+    ${opts.map(k=>`<div class="drow"><div class="dn">${esc(EX[k].n)}${k===exId?' <span class="tiny" style="color:var(--dim)">default</span>':""}
+        <div class="tiny">${esc(EX[k].m)}</div></div>
+      <button class="chip sm ${cur===k?"on":""}" data-act="pick" data-v="${exId}" data-alt="${k}">${cur===k?"Using":"Use"}</button></div>`).join("")}
+    <div style="height:10px"></div>
+    <div class="row2">
+      <button class="btn sm ${isHidden(exId)?"":"dgr"}" data-act="hide" data-v="${exId}">${isHidden(exId)?"Un-hide this lift":"Never show me this"}</button>
+      <button class="btn sm" data-act="swapclose">Done</button></div>
+    <div class="tiny" style="margin-top:8px">Hiding removes it from every program you use and picks a replacement automatically.</div>
+  </div>`;
 }
 function cardNext(d,key){
   const nd=nextDateFor(key,d); if(!nd) return "";
@@ -1485,7 +1580,9 @@ function vPlan(){
       <div style="padding:2px 13px 12px">${blocksFor(k,d).map((b,i)=>`<div class="drow">
         <div class="dn">${i+1}. ${esc(EX[b.e].n)}${b.prio?' <span class="tiny" style="color:var(--chalk)">priority</span>':""}
           <div class="tiny">${b.s}×${b.lo}-${b.hi} · jump shown right</div></div>
-        <div style="flex:0 0 74px"><input type="number" step="2.5" inputmode="decimal" value="${incOf(b.e)}" data-ex="${b.e}" oninput="setInc(this)" style="padding:8px 2px;font-size:14px"></div></div>`).join("")}
+        <button class="chip sm" data-act="swapopen" data-v="${b.e}" style="margin-right:6px">Swap</button>
+        <div style="flex:0 0 68px"><input type="number" step="2.5" inputmode="decimal" value="${incOf(b.e)}" data-ex="${b.e}" oninput="setInc(this)" style="padding:8px 2px;font-size:14px"></div></div>
+        ${UI.swapping===b.e?swapPicker(b.e):""}`).join("")}
         <div class="tiny" style="margin-top:8px">Jump = the smallest change that machine actually allows, in ${P.unitKg?"kg":"lb"}. Fix any that are wrong at your gym and every future suggestion follows.</div></div></div>`;}).join("");
 
   return `
@@ -1545,6 +1642,14 @@ function vSetup(){
       <select data-p="goal" onchange="setGoal(this.value)">${Object.entries(GOALS).map(([k,v])=>`<option value="${k}" ${P.goal===k?"selected":""}>${v.n}</option>`).join("")}</select>
       <div class="tiny" style="margin-top:6px">${esc((GOALS[P.goal]||GOALS.muscle).d)}</div></div>
   </div>
+  ${(()=>{const sw=Object.entries(P.swap||{}).filter(([a,b2])=>EX[a]&&EX[b2]), hd=(P.hidden||[]).filter(k=>EX[k]);
+    if(!sw.length&&!hd.length) return "";
+    return `<div class="card"><div class="eyebrow" style="margin-bottom:10px">Your exercise changes</div>
+      ${sw.map(([a,b2])=>`<div class="drow"><div class="dn">${esc(EX[a].n)} → <b style="color:var(--ink)">${esc(EX[b2].n)}</b></div>
+        <button class="chip sm" data-act="unswap" data-v="${a}">Undo</button></div>`).join("")}
+      ${hd.map(k=>`<div class="drow"><div class="dn">${esc(EX[k].n)} <span class="tiny" style="color:var(--red)">hidden</span></div>
+        <button class="chip sm" data-act="hide" data-v="${k}">Un-hide</button></div>`).join("")}
+    </div>`;})()}
   <div class="card"><div class="eyebrow" style="margin-bottom:11px">Allergies &amp; avoidances</div>
     ${!P.allerSet?`<div class="note r">Confirm these before using the meal plan. Nothing is excluded until you say so.</div>`:""}
     <div class="tiny" style="margin-bottom:10px">Anything ticked is removed from the food library and from the meal suggestions. Cross-contamination is still a label problem — check packaging.</div>
@@ -1894,6 +1999,24 @@ document.addEventListener("click",async ev=>{
     const i=P.supps.indexOf(v);
     if(i>-1) P.supps.splice(i,1); else P.supps.push(v);
     queue("p"); render(); return;
+  }
+  if(a==="swapopen"){ UI.swapping=UI.swapping===v?null:v; render(); return; }
+  if(a==="swapclose"){ UI.swapping=null; render(); return; }
+  if(a==="pick"){
+    const alt=b.dataset.alt; P.swap=P.swap||{};
+    if(alt===v) delete P.swap[v]; else P.swap[v]=alt;
+    UI.swapping=null; queue("p"); toast(alt===v?"Back to default":`Using ${EX[alt].n}`); render(); return;
+  }
+  if(a==="unswap"){ P.swap=P.swap||{}; delete P.swap[v]; queue("p"); render(); return; }
+  if(a==="hide"){
+    P.hidden=P.hidden||[];
+    const i=P.hidden.indexOf(v);
+    if(i>-1) P.hidden.splice(i,1);
+    else{
+      if(!altsFor(v,[]).length){ toast("Nothing else trains that pattern"); return; }
+      P.hidden.push(v); if(P.swap) delete P.swap[v];
+    }
+    UI.swapping=null; queue("p"); render(); return;
   }
   if(a==="sex"){ P.sex=v; queue("p"); render(); return; }
   if(a==="aller"){
