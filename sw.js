@@ -1,5 +1,5 @@
 /* Offline shell. Bump V after replacing index.html or the phone keeps the old one. */
-const V = "rackcard-v2";
+const V = "rackcard-v3";
 const FILES = ["./", "./index.html", "./manifest.webmanifest",
                "./icon-180.png", "./icon-192.png", "./icon-512.png"];
 
