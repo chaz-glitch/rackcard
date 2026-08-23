@@ -516,7 +516,7 @@ const DEF={
   v:2, name:"", age:35, heightIn:70, weightLb:180, activity:1.40, firstRun:1,
   phase:"regain", kcalTweak:0, protPerLb:1.0, fatPerLb:0.42,
   start:null, unitKg:false,
-  sched:{0:"rest",1:"upperA",2:"lowerA",3:"rest",4:"upperB",5:"lowerB",6:"arms"}, steps:7000, inc:{}, prio:[], supps:["creatine"], waterGoal:0,
+  sched:{0:"rest",1:"upperA",2:"lowerA",3:"rest",4:"upperB",5:"lowerB",6:"arms"}, steps:7000, inc:{}, prio:[], supps:["creatine"], waterGoal:0, lastExport:0,
   variant:{}, tourDone:false
 };
 let P={...DEF}, MO={}, LF={}, CF=[], PR={};
@@ -541,7 +541,7 @@ const dsp=v=>{if(v===''||v==null||isNaN(v))return '';const n=P.unitKg?v/2.2046:v
 
 /* ============================ LOCAL STORAGE ============================
    Everything lives in this phone's own browser storage. No server, no account,
-   nothing transmitted. If the phone is off, the data is unreachable. */
+   nothing transmitted. */
 const STORE={
   async get(k){ const v=localStorage.getItem(k); return v==null?null:{key:k,value:v}; },
   async set(k,v){ localStorage.setItem(k,v); return {key:k,value:v}; },
@@ -801,6 +801,12 @@ function weakSpots(){
 }
 function nextDateFor(key,from){ for(let i=1;i<=14;i++){const d=addDays(from,i); if(dayKeyFor(d)===key) return d;} return null; }
 
+/* ============================ BACKUP AGE ============================ */
+function backupAge(){
+  if(!P.lastExport) return {days:null,stale:true,never:true};
+  const days=Math.floor((Date.now()-P.lastExport)/864e5);
+  return {days,stale:days>=30,never:false};
+}
 /* ============================ WATER ============================ */
 function waterGoal(d){
   if(P.waterGoal>0) return P.waterGoal;
@@ -1415,9 +1421,14 @@ function vSetup(){
        <span>${UI.diag.months} month files</span><span>${UI.diag.days} days logged</span>
        <span>${UI.diag.lifts} lifts tracked</span><span>${UI.diag.tape} tape entries</span><span>${UI.diag.foods} custom foods</span>${UI.diag.queued?`<span style="color:var(--yellow)">${UI.diag.queued} waiting to write</span>`:""}</div>`:""}
     ${UI.lastSave?`<div class="tiny" style="margin-top:9px">Last write ${new Date(UI.lastSave).toLocaleTimeString()}${UI.saveErr?" — FAILED":" — OK"}</div>`:""}
+    ${UI.persisted!==undefined?`<div class="tiny" style="margin-top:5px">Storage marked protected: <b style="color:${UI.persisted?"var(--green)":"var(--yellow)"}">${UI.persisted?"yes":"not granted"}</b> — asks iOS not to evict your logs. Never a guarantee. Export anyway.</div>`:""}
   </div>
   <div class="card"><div class="eyebrow" style="margin-bottom:10px">Backup</div>
-    <div class="tiny" style="margin-bottom:11px">Export downloads a file and copies it to your clipboard. Do this before you accept any new version of the app from me.</div>
+    ${(()=>{const b=backupAge();
+      if(b.never) return `<div class="note r">You have never exported. Everything you have logged exists in exactly one place — this phone. Deleting the app or losing the phone loses all of it.</div>`;
+      if(b.stale) return `<div class="note">Last backup was ${b.days} days ago. Monthly is the right habit.</div>`;
+      return `<div class="note g">Backed up ${b.days===0?"today":b.days===1?"yesterday":b.days+" days ago"}.</div>`;})()}
+    <div class="tiny" style="margin-bottom:11px">Export downloads a file and copies it to your clipboard. Save it somewhere that is not this phone — iCloud Drive, or email it to yourself. Do this before accepting any new version of the app.</div>
     <div class="row2"><button class="btn sm" data-act="export">Export backup</button><button class="btn sm" data-act="import">Restore backup</button></div>
     <textarea id="imp" rows="3" placeholder="Paste a backup here, then tap Restore." style="margin-top:9px"></textarea>
     <div style="height:9px"></div><button class="btn sm" data-act="wipelogs">Start fresh — clear logs, keep setup</button>
@@ -1719,9 +1730,10 @@ document.addEventListener("click",async ev=>{
       const el=document.createElement("a"); el.href=u; el.download=`rackcard-${iso(new Date())}.json`;
       document.body.appendChild(el); el.click(); el.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); dl=true;
     }catch(e){}
+    P.lastExport=Date.now(); queue("p");
     try{ await navigator.clipboard.writeText(t); toast(dl?"Downloaded & copied":"Copied to clipboard"); }
     catch(e){ toast(dl?"Downloaded":"Backup is in the box — copy it"); }
-    return;
+    render(); return;
   }
   if(a==="import"){ const ta=document.getElementById("imp"); if(ta&&ta.value.trim()) importAll(ta.value.trim()); else toast("Paste a backup first"); return; }
   if(a==="wipelogs"){
@@ -1785,6 +1797,14 @@ if(self!==top){ document.documentElement.innerHTML="<p>This app will not run ins
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 }
+async function claimPersistence(){
+  try{
+    if(navigator.storage&&navigator.storage.persist){
+      const already=navigator.storage.persisted&&await navigator.storage.persisted();
+      UI.persisted=already||await navigator.storage.persist();
+    }
+  }catch(e){ UI.persisted=false; }
+}
 (async function boot(){
   const stored=await sget("fit:profile");
   P={...DEF,...(stored||{})};
@@ -1809,6 +1829,7 @@ if("serviceWorker" in navigator){
   if(mKey(today)!==mKey(UI.date)) await loadMonth(mKey(today));
   if(!P.start){ P.start=today; queue("p"); }
   render();
+  claimPersistence();
 
   if(fresh){
     if(ui.restEnd>Date.now()) startRest(ui.restLen||90,ui.restEnd);
