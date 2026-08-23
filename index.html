@@ -1525,25 +1525,30 @@ function bTape(){
   const weak=weakSpots(), prio=P.prio||[];
   const fld=s=>`<div class="drow"><div class="dn">${esc(s.n)}<div class="tiny">${esc(s.h)}</div></div>
      <div class="unit" style="flex:0 0 96px"><input type="number" step="0.1" inputmode="decimal" value="${t[s.k]!=null&&t[s.k]!==""?dspIn(t[s.k]):""}"
-       placeholder="${M[s.k]?dspIn(M[s.k].v):"—"}" data-k="${s.k}" oninput="setTape(this)"><span>${UIN()}</span></div></div>`;
-  const missing=rows.filter(r=>r.need).map(r=>r.need);
+       placeholder="${M[s.k]?dspIn(M[s.k].v):"—"}" data-k="${s.k}" oninput="setTape(this)" onblur="commitBody()"><span>${UIN()}</span></div></div>`;
   const bars=rows.map(r=>{
     if(r.score==null) return `<div class="pbar"><div class="pl">${esc(r.n)}</div>
-      <div class="pt"></div><div class="pv" style="color:var(--dim)">${r.cur?r1(r.cur)+'"':"not measured"}</div></div>`;
+      <div class="pt"></div><div class="pv" style="color:var(--dim);min-width:104px">${
+        !r.cur?"not measured":r.need?`needs your ${esc(r.need)}`:dspIn(r.cur)+UIN()}</div></div>`;
     const pc=clamp(r.score*100,0,118), col=r.score>=0.98?"var(--green)":r.score>=0.93?"var(--blue)":r.score>=0.87?"var(--yellow)":"var(--red)";
     return `<div class="pbar"><div class="pl">${esc(r.n)}</div>
       <div class="pt"><i style="width:${pc*0.85}%;background:${col}"></i><u style="left:85%"></u></div>
       <div class="pv">${dspIn(r.cur)} <span style="color:var(--dim)">/ ${dspIn(r.tgt)}${UIN()}</span></div></div>`;});
   const top=weak.slice(0,3);
+  const need=[...new Set(rows.filter(r=>r.need).map(r=>r.need))];
+  const haveFrame=FRAME.filter(f=>M[f.k]).length;
   return `
-  <div class="card">
-    <div class="eyebrow" style="margin-bottom:4px">Today's tape</div>
-    <p class="sub" style="margin:0 0 4px;font-size:13px">All measurements in ${UIN()==="in"?"inches":"centimetres"}. Measure cold, before training, same time of day. You only need to redo this every 4-6 weeks — the frame numbers just once.</p>
+  <div class="card" style="border-color:${haveFrame<FRAME.length?"var(--yellow)":"var(--line)"}">
+    <div class="eyebrow" style="margin-bottom:4px">Step 1 · Your frame <span style="color:${haveFrame===FRAME.length?"var(--green)":"var(--yellow)"}">${haveFrame}/${FRAME.length}</span></div>
+    <p class="sub" style="margin:0 0 10px;font-size:13px">Measure these three once and never again — they are bone, they do not change with training, and every target below is calculated from them. Without them the app has nothing to compare your measurements against.</p>
     ${FRAME.map(fld).join("")}
-    <div style="height:8px"></div>
+  </div>
+  <div class="card">
+    <div class="eyebrow" style="margin-bottom:4px">Step 2 · Measurements</div>
+    <p class="sub" style="margin:0 0 8px;font-size:13px">All measurements in ${UIN()==="in"?"inches":"centimetres"}. Measure cold, before training, same time of day. Every 4-6 weeks is plenty.</p>
     ${SITES.map(fld).join("")}
   </div>
-  ${missing.length?`<div class="note">Add your ${[...new Set(missing)].join(" and ")} measurement to unlock the rest of the targets. Those bones never change, which is exactly what makes them an honest ceiling.</div>`:""}
+  ${need.length?`<div class="note"><b>Nothing below can be scored yet.</b> Enter your ${need.join(", ")} above — ${need.length>1?"those measurements are":"that measurement is"} what the targets are built from.</div>`:""}
   ${vt?`<div class="card">
     <div class="eyebrow">V-taper · shoulders ÷ waist</div>
     <div class="kcalbig"><div class="n" style="color:${vt.r>=1.6?"var(--green)":vt.r>=1.45?"var(--blue)":"var(--yellow)"}">${r1(vt.r*100)/100}</div>
