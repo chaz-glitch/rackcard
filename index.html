@@ -436,17 +436,31 @@ const DAYKEYS=["upperA","lowerA","upperB","lowerB","arms","fullA","fullB","fullC
 const PROGRAMS={
  upperlower:{n:"Upper / Lower",d:"Four lifting days, each muscle twice a week, plus an optional arms day. The strongest choice once you have a base.",
    lvl:"Some experience or more",
+   why:[["Every muscle twice a week.","A classic bro split trains each muscle once every five days. Two stimulating sessions a week beats one at the same total volume — one of the most replicated findings in the training literature."],
+        ["All three rep ranges every week.","Heavy work drives strength, moderate work drives most of the growth, high-rep isolation adds volume the joints can absorb. Running them in the same week gets all three instead of trading one for another."],
+        ["Machines and free weights both.","Loading a muscle hard matters more than which implement does it. Machine work often loads the target harder because balance and the spine stop being the limit."]],
    s:{0:"rest",1:"upperA",2:"lowerA",3:"rest",4:"upperB",5:"lowerB",6:"arms"}},
  foundations:{n:"Foundations",d:"Three full-body sessions with two conditioning days between them. Every movement pattern practised three times a week, which is how technique and strength come fastest when you are new.",
    lvl:"New to lifting",
+   why:[["Practice beats volume early on.","Most of a beginner's first months of progress is the nervous system learning the movement. Three sessions on each pattern per week teaches it faster than one long session ever could."],
+        ["Short sessions you will actually do.","Around forty minutes. A program you finish four weeks running beats a better one you abandon in two."],
+        ["Conditioning between lifting days.","Walking and mobility on the off days builds the aerobic base that makes lifting sessions recover faster, without competing with them."]],
    s:{0:"rest",1:"fullA",2:"cond",3:"fullB",4:"cond",5:"fullC",6:"rest"}},
  fullbody4:{n:"Full Body ×4",d:"Four full-body days. More total practice than Foundations without the jump to a split.",
    lvl:"New to lifting, more time",
+   why:[["More practice, same idea.","Four exposures a week to each pattern instead of three. Worth it only if recovery and schedule genuinely allow it."],
+        ["Still no split.","Splitting the body up matters once you need more volume per muscle than one session can hold. That is not most people's problem in their first year."]],
    s:{0:"rest",1:"fullA",2:"fullB",3:"cond",4:"fullC",5:"fullA",6:"rest"}},
 powerbuilding:{n:"Powerbuilding",d:"Squat, bench and deadlift trained heavy at 2-5 reps with five-minute rests, then hypertrophy work behind each one. Built for strength and size together, not for peaking to a meet.",
    lvl:"Barbell gym, strength focus",
+   why:[["Heavy first, always.","The main lift comes first when you are freshest. Everything after it is accessory work and is allowed to suffer."],
+        ["Five minutes of rest is not laziness.","Strength at 2-5 reps is limited by how recovered you are, not by how tired you feel. Cutting rest to three minutes costs you reps and therefore progress."],
+        ["A variation behind each main lift.","Pause squats, close-grip bench and deficit pulls attack the position where the main lift usually fails, at a load light enough to accumulate volume."],
+        ["Size work is not optional.","A bigger muscle has a higher strength ceiling. The higher-rep work behind each main lift is what raises it."]],
    s:{0:"rest",1:"sqDay",2:"bnDay",3:"rest",4:"dlDay",5:"szDay",6:"rest"}},
 minimal:{n:"Three Days",d:"Three sessions a week and nothing else required. The honest minimum that still builds muscle.",
+   why:[["Three is enough.","Three full-body sessions a week produce most of the muscle and strength that five would, for a fraction of the time cost."],
+        ["Nothing here is optional.","With only three sessions, skipping one costs a third of your week. That is the trade for the smaller commitment."]],
    lvl:"Any level, limited time",
    s:{0:"rest",1:"fullA",2:"rest",3:"fullB",4:"rest",5:"fullC",6:"rest"}}
 };
@@ -647,8 +661,8 @@ const CARDIO={
  upperB:{n:"Incline walk finisher",min:10,opt:true,tgt:"12% grade · 3.0-3.2 mph",
    d:"Same as Upper A. Skip it without guilt if you are running late — the rest-day session is the one that matters."},
  lowerA:null, lowerB:null, fullA:null, fullB:null, fullC:null, sqDay:null, bnDay:null, dlDay:null, szDay:null,
- arms:{n:"Incline intervals",min:15,opt:false,tgt:"6 rounds · 60s hard / 90s easy",
-   d:"60 seconds at 15% grade and 4.0 mph, then 90 seconds at 8% and 2.8 mph. Six rounds. Walking, never running — the payoff is identical and your knees keep working."},
+ arms:{n:"Incline intervals",min:15,opt:false,tgt:"6 rounds: 1 min hard, 90 sec easy",
+   d:"One minute at 15% grade and 4.0 mph, then 90 seconds easy at 8% and 2.8 mph. That is one round. Do six, about 15 minutes total. Walking the whole time, never running — the payoff is the same and your knees keep working."},
  cond:{n:"Zone 2 walk & mobility",min:35,opt:false,tgt:"10-15% grade · conversational",
    d:"Thirty-five minutes at a pace you could hold a conversation through, then ten minutes of stretching whatever felt tight this week."},
  rest:{n:"Zone 2 incline walk",min:38,opt:false,tgt:"10-15% grade · 115-130 bpm",
@@ -1359,12 +1373,12 @@ function cardWeighIn(d,day){
    <div class="row3">
     <div class="field" style="margin:0"><label>Weight</label>
       <div class="unit"><input type="number" step="0.1" inputmode="decimal" value="${day.bw!=null?(P.unitKg?r1(day.bw/2.2046):day.bw):""}"
-        placeholder="—" data-k="bw" oninput="setBody(this)"><span>${P.unitKg?"kg":"lb"}</span></div></div>
+        placeholder="—" data-k="bw" oninput="setBody(this)" onblur="commitBody()"><span>${P.unitKg?"kg":"lb"}</span></div></div>
     <div class="field" style="margin:0"><label>Waist</label>
       <div class="unit"><input type="number" step="0.1" inputmode="decimal" value="${day.t&&day.t.waist!=null?dspIn(day.t.waist):""}"
-        placeholder="${M.waist?dspIn(M.waist.v):"—"}" data-k="waist" oninput="setTape(this)"><span>${UIN()}</span></div></div>
+        placeholder="${M.waist?dspIn(M.waist.v):"—"}" data-k="waist" oninput="setTape(this)" onblur="commitBody()"><span>${UIN()}</span></div></div>
     <div class="field" style="margin:0"><label>Steps</label>
-      <input type="number" step="100" inputmode="numeric" value="${day.steps!=null?day.steps:""}" placeholder="—" data-k="steps" oninput="setBody(this)"></div>
+      <input type="number" step="100" inputmode="numeric" value="${day.steps!=null?day.steps:""}" placeholder="—" data-k="steps" oninput="setBody(this)" onblur="commitBody()"></div>
    </div>
    <div class="tiny" style="margin-top:10px">Weigh after the bathroom, before food or water. Daily numbers bounce 3-4 lb — only the trend means anything.</div></div>`;
 }
@@ -1485,8 +1499,8 @@ function bWeight(){
   return entry+`
   <div class="card">
     <div class="eyebrow">Bodyweight</div>
-    <div class="kcalbig"><div class="n">${last?r1(cv(last.v)):"—"}</div>
-      <div class="of">${P.unitKg?"kg":"lb"}${last?` · ${pretty(last.d)}`:""}</div></div>
+    <div class="kcalbig"><div class="n" id="bw-big">${last?r1(cv(last.v)):"—"}</div>
+      <div class="of" id="bw-when">${P.unitKg?"kg":"lb"}${last?` · ${pretty(last.d)}`:""}</div></div>
     ${first&&last&&first.d!==last.d?`<div class="tiny" style="margin-top:6px">${last.v-first.v>0?"+":""}${r1(cv(last.v-first.v))} since ${pretty(first.d)}</div>`:""}
     ${w?`<div class="stats" style="margin-top:9px"><span>Trend ${r1(cv(w.cur))}</span>
       <span style="color:${w.rate>0?"var(--green)":"var(--yellow)"}">${w.rate>0?"+":""}${r1(cv(w.rate))}/week</span>
@@ -1600,24 +1614,23 @@ function vPlan(){
     <div class="tiny" style="margin-top:10px">Four days is the required dose. The fifth is a bonus — skip it in a bad week with no guilt.</div></div>
   <div class="card pad0">
     <div class="exhead"><div class="band" style="background:var(--green)"></div>
-      <div class="extitle"><div class="eyebrow" style="color:var(--green)">Cardio</div><div class="nm">Incline walking · 136 min a week</div>
-      <div class="rx">Never on a leg day</div></div></div>
+      <div class="extitle"><div class="eyebrow" style="color:var(--green)">Cardio</div><div class="nm">Incline walking</div>
+      <div class="rx">Placed so it never competes with a leg session</div></div></div>
     <div style="padding:2px 13px 13px">
-      ${[["Every lifting day","Incline walk warm-up, 10-12%","5 min"],["Wed &amp; Sun","Zone 2, 115-130 bpm","38 min"],
-         ["After Upper A / B","Incline walk, optional","10 min"],["Sat, after arms","6 × 60s hard / 90s easy","15 min"],
+      ${[["Every lifting day","Incline walk warm-up, 10-12% grade","5 min"],["Rest days","Steady walk you could talk through","38 min"],
+         ["After an upper-body day","Incline walk, optional","10 min"],["Interval day","6 rounds: 1 min hard, 90 sec easy","15 min"],
          ["Every day",`Steps, target ${STEPS_TGT.toLocaleString()}`,"—"]].map(([a,b,c])=>
         `<div class="drow"><div class="dn">${a}<div class="tiny">${b}</div></div><div class="dv">${c}</div></div>`).join("")}
       <div class="sub" style="font-size:13px;margin-top:12px">
-       <p style="margin:0 0 9px"><b style="color:var(--ink)">Why walking.</b> Same cardiovascular return, none of the impact, almost no recovery cost. Running hard on a Thursday steals from Friday's legs.</p>
-       <p style="margin:0"><b style="color:var(--ink)">Steps are the real lever.</b> Three hours driving plus a desk puts you near 3,000 on autopilot — that is what set your maintenance number. Two ten-minute walks beat any treadmill session.</p></div>
+       <p style="margin:0 0 9px"><b style="color:var(--ink)">Why walking.</b> The same cardiovascular return as running, none of the impact, almost no recovery cost. A hard run the day before a leg session steals from it; a walk does not.</p>
+       <p style="margin:0"><b style="color:var(--ink)">Steps matter more than the treadmill.</b> A desk job and a long commute can put you under 3,000 steps without you noticing, and that is what sets your maintenance calories. Two ten-minute walks move the number more than a cardio session does.</p></div>
     </div></div>
-  <div class="sec"><h2>Why it is built this way</h2><div class="rule"></div></div>
+  <div class="sec"><h2>Why ${esc((PROGRAMS[P.program]||PROGRAMS.upperlower).n)} is built this way</h2><div class="rule"></div></div>
   <div class="card"><div class="sub" style="font-size:13.5px">
-   <p style="margin:0 0 10px"><b style="color:var(--ink)">Every muscle twice a week.</b> Your old split hit each muscle once every 4-5 days. Two stimulating sessions a week beats one at the same total volume — the biggest single upgrade here.</p>
-   <p style="margin:0 0 10px"><b style="color:var(--ink)">All three rep ranges every week.</b> Heavy work drives strength, moderate drives most of the growth, high-rep isolation adds volume your joints absorb. You get all three instead of trading one for another every quarter.</p>
-   <p style="margin:0 0 10px"><b style="color:var(--ink)">Effort is prescribed.</b> RIR is reps left in the tank. Week 1 stops 3 short, week 5 goes to the edge, week 6 backs off. Training at one effort every session is why most people stall.</p>
-   <p style="margin:0 0 10px"><b style="color:var(--ink)">No barbell squat or deadlift.</b> Hack squat and leg press load the quads harder because your spine is not the limit. Hip thrusts, leg curls and back extensions cover what a deadlift gave you at a fraction of the recovery cost.</p>
-   <p style="margin:0"><b style="color:var(--ink)">Double progression.</b> Clear the top of the range on every set, then add weight and drop back to the bottom. The card tells you which one you are doing today.</p>
+   ${((PROGRAMS[P.program]||PROGRAMS.upperlower).why||[]).map(w=>
+     `<p style="margin:0 0 10px"><b style="color:var(--ink)">${esc(w[0])}</b> ${esc(w[1])}</p>`).join("")}
+   <p style="margin:0 0 10px"><b style="color:var(--ink)">Effort is prescribed, not guessed.</b> RIR means reps left in reserve — how many more you could have done. Early weeks stop well short of failure, later weeks get close, then a deload backs off. Training at one effort every session is why most people stall.</p>
+   <p style="margin:0"><b style="color:var(--ink)">Progress by double progression.</b> Clear the top of the rep range on every set, then add weight and drop back to the bottom of the range. Each lift tells you which one you are doing today.</p>
   </div></div>
   <div class="sec"><h2>Full program</h2><div class="rule"></div></div>${days}`;
 }
@@ -1761,7 +1774,26 @@ function setBody(el){
   if(v!=null&&k==="bw"&&P.unitKg) v=v*2.2046;
   day[k]=v;
   if(k==="bw"&&v&&d===iso(new Date())){ P.weightLb=Math.round(v*10)/10; queue("p"); }
-  saveDay(d);
+  saveDay(d); patchWeight();
+}
+/* Update the readouts live. A full redraw here would steal focus mid-typing. */
+function patchWeight(){
+  const ser=bwSeries(), last=ser.length?ser[ser.length-1]:null;
+  const cv=x=>P.unitKg?x/2.2046:x;
+  const n=document.getElementById("bw-big");
+  if(n) n.textContent=last?r1(cv(last.v)):"—";
+  const u=document.getElementById("bw-when");
+  if(u) u.textContent=`${P.unitKg?"kg":"lb"}${last?` · ${pretty(last.d)}`:""}`;
+}
+/* Redraw once you have finished with the card, so the charts catch up. */
+let bodyBlurT;
+function commitBody(){
+  clearTimeout(bodyBlurT);
+  bodyBlurT=setTimeout(()=>{
+    const a=document.activeElement;
+    if(a&&a.dataset&&(a.dataset.k||a.dataset.p)) return;   // still editing another field
+    if(UI.view==="body"||UI.view==="train") render();
+  },160);
 }
 function setTape(el){
   const d=UI.date, day=getDay(d,true);
