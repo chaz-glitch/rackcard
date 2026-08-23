@@ -690,26 +690,94 @@ const FRAME=[
  {k:"ankle",n:"Ankle",h:"Narrowest point above the ankle bone. Sets your calf target."},
  {k:"knee",n:"Knee",h:"Around the middle of the kneecap, leg straight and relaxed. Sets your thigh target."}];
 const SITES=[
- {k:"shoulder",n:"Shoulders",g:"delts",h:"Widest point around the delts, arms hanging.",ref:"vwaist",mult:1.618},
- {k:"chest",n:"Chest",g:"chest",h:"At the nipple line, arms down, after a normal breath out.",ref:"wrist",mult:6.5},
- {k:"arm",n:"Upper arm",g:"arms",h:"Flexed, at the peak. Same arm every time.",ref:"wrist",mult:2.52},
- {k:"forearm",n:"Forearm",g:"arms",h:"Widest point below the elbow, fist clenched.",ref:"wrist",mult:1.87},
- {k:"neck",n:"Neck",g:"neck",h:"Just below the Adam's apple, tape level.",ref:"wrist",mult:2.45},
- {k:"waist",n:"Waist",g:"waist",h:"At the navel, relaxed. Do not suck in.",ref:"height",mult:0.455,lower:1},
- {k:"thigh",n:"Thigh",g:"quads",h:"Widest point, just under the glute.",ref:"knee",mult:1.75},
- {k:"calf",n:"Calf",g:"calves",h:"Widest point, standing.",ref:"ankle",mult:1.92}];
+ {k:"shoulder",n:"Shoulders",g:"delts",h:"Widest point around the delts, arms hanging."},
+ {k:"chest",n:"Chest",g:"chest",h:"At the nipple line, arms down, after a normal breath out."},
+ {k:"arm",n:"Upper arm",g:"arms",h:"Flexed, at the peak. Same arm every time."},
+ {k:"forearm",n:"Forearm",g:"arms",h:"Widest point below the elbow, fist clenched."},
+ {k:"neck",n:"Neck",g:"neck",h:"Just below the Adam's apple, tape level."},
+ {k:"waist",n:"Waist",g:"waist",h:"At the navel, relaxed. Do not suck in."},
+ {k:"hip",n:"Hips",g:"glutes",h:"Widest point around the glutes, feet together."},
+ {k:"thigh",n:"Thigh",g:"quads",h:"Widest point, just under the glute."},
+ {k:"calf",n:"Calf",g:"calves",h:"Widest point, standing."}];
+
+/* ============================ PHYSIQUE TARGETS ============================
+   Which shape you are chasing decides which ratios matter. Every target is still
+   scaled to your own skeleton — the look changes the goal, not the honesty of it.
+   `t` maps a site to {ref, mult}. `lower` means smaller scores better. */
+const PHYSIQUES={
+ vtaper:{n:"V-taper",who:"Classic men's physique",
+   d:"Wide shoulders and back over a narrow waist. The ratios are the ones Steve Reeves and the classic bodybuilders trained to.",
+   headline:{n:"V-taper",a:"shoulder",b:"waist",target:1.618,
+     note:"Shoulders divided by waist. The single number that decides how built you look with a shirt on — it moves from both ends."},
+   pri:["delts","back"],
+   focus:["Side delts","Upper back width","Waist control"],
+   t:{shoulder:{ref:"vwaist",mult:1.618},chest:{ref:"wrist",mult:6.5},arm:{ref:"wrist",mult:2.52},
+      forearm:{ref:"wrist",mult:1.87},neck:{ref:"wrist",mult:2.45},waist:{ref:"height",mult:0.455,lower:1},
+      thigh:{ref:"knee",mult:1.75},calf:{ref:"ankle",mult:1.92}}},
+
+ hourglass:{n:"Hourglass",who:"Balanced top and bottom, small waist",
+   d:"Shoulders and hips roughly equal with a clearly narrower waist between them. Built by adding to the delts and glutes rather than by shrinking the middle.",
+   headline:{n:"Waist to hip",a:"waist",b:"hip",target:0.70,lower:1,
+     note:"Waist divided by hips. Around 0.70 is the classic hourglass. Building glutes and delts moves it as surely as losing fat does."},
+   pri:["glutes","delts"],
+   focus:["Glutes","Side delts","Waist control"],
+   t:{shoulder:{ref:"hip",mult:1.0},hip:{ref:"vwaist",mult:1.43},waist:{ref:"hip",mult:0.70,lower:1},
+      chest:{ref:"wrist",mult:5.6},arm:{ref:"wrist",mult:2.15},forearm:{ref:"wrist",mult:1.7},
+      thigh:{ref:"knee",mult:1.80},calf:{ref:"ankle",mult:1.90}}},
+
+ glutes:{n:"Glute-focused",who:"Lower body priority",
+   d:"Maximum glute and hamstring development with the waist held. Hips and thighs carry the shape; the upper body supports it.",
+   headline:{n:"Hip to waist",a:"hip",b:"waist",target:1.47,
+     note:"Hips divided by waist. Higher is the goal here, and glute size is the lever you actually control."},
+   pri:["glutes","hams"],
+   focus:["Glutes","Hamstrings","Waist control"],
+   t:{hip:{ref:"vwaist",mult:1.52},waist:{ref:"height",mult:0.45,lower:1},thigh:{ref:"knee",mult:1.88},
+      shoulder:{ref:"hip",mult:0.98},calf:{ref:"ankle",mult:1.92},arm:{ref:"wrist",mult:2.1},
+      chest:{ref:"wrist",mult:5.5}}},
+
+ athletic:{n:"Balanced athletic",who:"Proportional, no single emphasis",
+   d:"Even development everywhere with a lean waist. No exaggerated ratio to chase — useful if you care more about performance and health than a specific silhouette.",
+   headline:{n:"Waist to height",a:"waist",b:"height",target:0.45,lower:1,
+     note:"Waist divided by height. Under about 0.5 is the health marker most consistently linked to lower risk, and it needs no comparison to anyone else."},
+   pri:[],
+   focus:["Even development","Waist control","Conditioning"],
+   t:{shoulder:{ref:"vwaist",mult:1.5},chest:{ref:"wrist",mult:6.1},arm:{ref:"wrist",mult:2.35},
+      forearm:{ref:"wrist",mult:1.8},neck:{ref:"wrist",mult:2.3},waist:{ref:"height",mult:0.45,lower:1},
+      hip:{ref:"vwaist",mult:1.35},thigh:{ref:"knee",mult:1.78},calf:{ref:"ankle",mult:1.92}}},
+
+ mass:{n:"Overall mass",who:"Size everywhere, less waist emphasis",
+   d:"Maximum muscle across the whole body. Powerlifters and anyone chasing size rather than silhouette — the waist target is relaxed because thickness through the midsection comes with the territory.",
+   headline:{n:"Chest to waist",a:"chest",b:"waist",target:1.35,
+     note:"Chest divided by waist. A thickness measure rather than a taper one, which is the right trade when size is the goal."},
+   pri:["chest","arms"],
+   focus:["Chest and back thickness","Legs","Arms"],
+   t:{chest:{ref:"wrist",mult:6.9},arm:{ref:"wrist",mult:2.62},forearm:{ref:"wrist",mult:1.95},
+      neck:{ref:"wrist",mult:2.55},shoulder:{ref:"vwaist",mult:1.55},thigh:{ref:"knee",mult:1.9},
+      calf:{ref:"ankle",mult:1.95},waist:{ref:"height",mult:0.50,lower:1}}}
+};
 
 /* Extra volume for a lagging area, placed on the days that have room in the 75 min. */
 const PRIO={
- delts:{n:"Side delts",d:["lowerA","lowerB"],b:[{e:"lat_cable",s:3,lo:12,hi:20,r:60,t:"P"}]},
- arms:{n:"Arms",d:["lowerA","lowerB"],b:[{e:"cable_curl",s:2,lo:10,hi:15,r:65,t:"P"},{e:"pushdown",s:2,lo:12,hi:18,r:60,t:"P"}]},
- chest:{n:"Chest",d:["lowerA"],b:[{e:"pec_deck",s:3,lo:12,hi:18,r:70,t:"P"}]},
- calves:{n:"Calves",d:["upperA","upperB"],b:[{e:"calf_st",s:3,lo:10,hi:15,r:65,t:"P"}]},
- neck:{n:"Neck & traps",d:["upperA","upperB"],b:[{e:"shrug",s:3,lo:10,hi:15,r:70,t:"P"}]},
- quads:{n:"Quads",d:["lowerB"],b:[{e:"leg_ext",s:3,lo:12,hi:18,r:70,t:"P"}]},
+ delts:{n:"Side delts",d:["lowerA","lowerB","fullA","fullC","sqDay","dlDay"],
+   b:[{e:"lat_cable",s:3,lo:12,hi:20,r:60,t:"P"}]},
+ glutes:{n:"Glutes",d:["upperA","upperB","fullB","bnDay","szDay"],
+   b:[{e:"hip_thrust",s:3,lo:8,hi:12,r:120,t:"H"},{e:"glute_mach",s:2,lo:12,hi:15,r:70,t:"P"}]},
+ hams:{n:"Hamstrings",d:["upperA","fullC","bnDay","szDay"],
+   b:[{e:"lying_curl",s:3,lo:10,hi:15,r:90,t:"H"}]},
+ back:{n:"Back width",d:["lowerA","lowerB","fullB","sqDay"],
+   b:[{e:"pulldown_n",s:3,lo:10,hi:15,r:90,t:"H"}]},
+ arms:{n:"Arms",d:["lowerA","lowerB","fullA","fullC","sqDay","dlDay"],
+   b:[{e:"cable_curl",s:2,lo:10,hi:15,r:65,t:"P"},{e:"pushdown",s:2,lo:12,hi:18,r:60,t:"P"}]},
+ chest:{n:"Chest",d:["lowerA","fullC","dlDay"],
+   b:[{e:"pec_deck",s:3,lo:12,hi:18,r:70,t:"P"}]},
+ calves:{n:"Calves",d:["upperA","upperB","fullA","fullB","bnDay","szDay"],
+   b:[{e:"calf_st",s:3,lo:10,hi:15,r:65,t:"P"}]},
+ quads:{n:"Quads",d:["lowerB","fullB","bnDay"],
+   b:[{e:"leg_ext",s:3,lo:12,hi:18,r:70,t:"P"}]},
+ neck:{n:"Neck & traps",d:["upperA","upperB","fullA","bnDay","szDay"],
+   b:[{e:"shrug",s:3,lo:10,hi:15,r:70,t:"P"}]},
  waist:{n:"Waist",d:[],b:[]}
 };
-
 
 const PHASES={
  regain:{n:"Regain",adj:0,c:"var(--green)",d:"Maintenance calories. You are re-earning muscle you already built — that happens at maintenance and it happens fast. 4-6 weeks."},
@@ -721,7 +789,7 @@ const PHASES={
 const DEF={
   v:3, name:"", sex:"m", age:35, heightIn:70, weightLb:180, activity:1.40, firstRun:1,
   level:"some", goal:"health", program:"upperlower", allergens:[], allerSet:0,
-  swap:{}, hidden:[],
+  swap:{}, hidden:[], physique:"athletic",
   phase:"regain", kcalTweak:0, protPerLb:1.0, fatPerLb:0.42,
   start:null, unitKg:false,
   sched:{0:"rest",1:"upperA",2:"lowerA",3:"rest",4:"upperB",5:"lowerB",6:"arms"}, steps:7000, inc:{}, prio:[], supps:["creatine"], waterGoal:0, lastExport:0,
@@ -1019,26 +1087,44 @@ function latestTape(){
   }));
   return out;
 }
+function phys(){ return PHYSIQUES[P.physique]||PHYSIQUES.athletic; }
 function proportions(){
-  const M=latestTape();
-  const ref={wrist:M.wrist&&M.wrist.v, ankle:M.ankle&&M.ankle.v, knee:M.knee&&M.knee.v,
-             height:P.heightIn, vwaist:P.heightIn*0.455};
+  const M=latestTape(), PH=phys();
+  const ref={height:P.heightIn, vwaist:P.heightIn*0.455};
+  FRAME.forEach(f=>{ ref[f.k]=M[f.k]&&M[f.k].v; });
+  SITES.forEach(s=>{ if(M[s.k]) ref[s.k]=M[s.k].v; });   // a site can be the yardstick for another
   return SITES.map(s=>{
-    const base=ref[s.ref];
-    const tgt=base>0?base*s.mult:null;
+    const spec=PH.t[s.k];
     const cur=M[s.k]?M[s.k].v:null;
+    if(!spec) return {...s,cur,tgt:null,score:null,tracked:true,when:M[s.k]&&M[s.k].d};
+    const base=ref[spec.ref];
+    const tgt=base>0?base*spec.mult:null;
     let score=null;
-    if(cur>0&&tgt>0) score=s.lower?tgt/cur:cur/tgt;
-    return {...s,cur,tgt,score,when:M[s.k]&&M[s.k].d,need:s.ref!=="height"&&!base?s.ref:null};
+    if(cur>0&&tgt>0) score=spec.lower?tgt/cur:cur/tgt;
+    return {...s,cur,tgt,score,lower:spec.lower,when:M[s.k]&&M[s.k].d,
+            need:base>0?null:(spec.ref==="height"||spec.ref==="vwaist"?null:spec.ref)};
   });
 }
-function vTaper(){
-  const M=latestTape();
-  if(!(M.shoulder&&M.waist)) return null;
-  return {r:M.shoulder.v/M.waist.v, sh:M.shoulder.v, wa:M.waist.v};
+function keyRatio(){
+  const M=latestTape(), h=phys().headline;
+  const val=k=>k==="height"?P.heightIn:(M[k]?M[k].v:null);
+  const a=val(h.a), b=val(h.b);
+  if(!(a>0&&b>0)) return {miss:[h.a,h.b].filter(k=>!(val(k)>0)),h};
+  const r=a/b;
+  const good=h.lower?r<=h.target*1.03:r>=h.target*0.97;
+  const near=h.lower?r<=h.target*1.12:r>=h.target*0.90;
+  return {r,a,b,h,good,near};
 }
 function weakSpots(){
-  return proportions().filter(r=>r.score!=null).sort((a,b)=>a.score-b.score);
+  return proportions().filter(r=>r.score!=null&&PRIO[r.g]&&PRIO[r.g].d.length).sort((a,b)=>a.score-b.score);
+}
+/* What to train next: the areas this look is actually built on, then whatever is
+   furthest behind. A glute-focused lifter should see glutes even if a calf scores worse. */
+function workOn(){
+  const all=weakSpots(), pri=phys().pri||[];
+  const core=all.filter(r=>pri.indexOf(r.g)>-1&&r.score<1).map(r=>({...r,core:true}));
+  const rest=all.filter(r=>!core.some(c=>c.k===r.k));
+  return [...core,...rest].slice(0,4);
 }
 function nextDateFor(key,from){ for(let i=1;i<=14;i++){const d=addDays(from,i); if(dayKeyFor(d)===key) return d;} return null; }
 
@@ -1521,20 +1607,20 @@ function bWeight(){
     </div>`).join(""):`<div class="empty">No sessions logged yet.</div>`}</div>`;
 }
 function bTape(){
-  const d=UI.date, day=getDay(d), t=(day.t)||{}, M=latestTape(), rows=proportions(), vt=vTaper();
+  const d=UI.date, day=getDay(d), t=(day.t)||{}, M=latestTape(), rows=proportions();
   const weak=weakSpots(), prio=P.prio||[];
   const fld=s=>`<div class="drow"><div class="dn">${esc(s.n)}<div class="tiny">${esc(s.h)}</div></div>
      <div class="unit" style="flex:0 0 96px"><input type="number" step="0.1" inputmode="decimal" value="${t[s.k]!=null&&t[s.k]!==""?dspIn(t[s.k]):""}"
        placeholder="${M[s.k]?dspIn(M[s.k].v):"—"}" data-k="${s.k}" oninput="setTape(this)" onblur="commitBody()"><span>${UIN()}</span></div></div>`;
   const bars=rows.map(r=>{
     if(r.score==null) return `<div class="pbar"><div class="pl">${esc(r.n)}</div>
-      <div class="pt"></div><div class="pv" style="color:var(--dim);min-width:104px">${
-        !r.cur?"not measured":r.need?`needs your ${esc(r.need)}`:dspIn(r.cur)+UIN()}</div></div>`;
+      <div class="pt"></div><div class="pv" style="color:var(--dim);min-width:112px">${
+        !r.cur?"not measured":r.need?`needs your ${esc(r.need)}`:(r.tracked?dspIn(r.cur)+UIN()+" · tracked":dspIn(r.cur)+UIN())}</div></div>`;
     const pc=clamp(r.score*100,0,118), col=r.score>=0.98?"var(--green)":r.score>=0.93?"var(--blue)":r.score>=0.87?"var(--yellow)":"var(--red)";
     return `<div class="pbar"><div class="pl">${esc(r.n)}</div>
       <div class="pt"><i style="width:${pc*0.85}%;background:${col}"></i><u style="left:85%"></u></div>
       <div class="pv">${dspIn(r.cur)} <span style="color:var(--dim)">/ ${dspIn(r.tgt)}${UIN()}</span></div></div>`;});
-  const top=weak.slice(0,3);
+  const top=workOn();
   const need=[...new Set(rows.filter(r=>r.need).map(r=>r.need))];
   const haveFrame=FRAME.filter(f=>M[f.k]).length;
   return `
@@ -1549,20 +1635,32 @@ function bTape(){
     ${SITES.map(fld).join("")}
   </div>
   ${need.length?`<div class="note"><b>Nothing below can be scored yet.</b> Enter your ${need.join(", ")} above — ${need.length>1?"those measurements are":"that measurement is"} what the targets are built from.</div>`:""}
-  ${vt?`<div class="card">
-    <div class="eyebrow">V-taper · shoulders ÷ waist</div>
-    <div class="kcalbig"><div class="n" style="color:${vt.r>=1.6?"var(--green)":vt.r>=1.45?"var(--blue)":"var(--yellow)"}">${r1(vt.r*100)/100}</div>
-      <div class="of">target 1.62 · ${dspIn(vt.sh)} over ${dspIn(vt.wa)} ${UIN()}</div></div>
-    <div class="tiny" style="margin-top:9px">The single number that drives how built you look with a shirt on. It moves from both ends — side delts and back width push the top up, waist pulls the bottom down.</div>
-  </div>`:""}
+  ${(()=>{const K=keyRatio(); const H=K.h;
+    if(K.miss) return `<div class="card"><div class="eyebrow">${esc(H.n)}</div>
+      <p class="sub" style="margin:8px 0 0;font-size:13px">Measure your ${K.miss.map(k=>{const s=SITES.find(x=>x.k===k);return esc(s?s.n.toLowerCase():k);}).join(" and ")} to see this.</p>
+      <div class="tiny" style="margin-top:8px">${esc(H.note)}</div></div>`;
+    const col=K.good?"var(--green)":K.near?"var(--blue)":"var(--yellow)";
+    return `<div class="card">
+      <div class="eyebrow">${esc(H.n)} · ${esc(phys().n)}</div>
+      <div class="kcalbig"><div class="n" style="color:${col}">${Math.round(K.r*100)/100}</div>
+        <div class="of">target ${H.target} · ${dspIn(K.a)} over ${dspIn(K.b)} ${UIN()}</div></div>
+      <div class="tiny" style="margin-top:9px">${esc(H.note)}</div></div>`;})()}
   <div class="sec"><h2>Against your frame</h2><div class="rule"></div></div>
+  <div class="card" style="padding:12px 14px">
+    <div class="eyebrow" style="margin-bottom:8px">Target look</div>
+    <div class="chips">${Object.entries(PHYSIQUES).map(([k,v])=>`<button class="chip ${P.physique===k?"on":""}" data-act="physique" data-v="${k}">${v.n}</button>`).join("")}</div>
+    <div class="tiny" style="margin-top:9px">${esc(phys().d)}</div>
+    <div class="stats" style="margin-top:8px">${phys().focus.map(f=>`<span>${esc(f)}</span>`).join("")}</div>
+  </div>
   <div class="card">${bars.join("")}
-    <div class="tiny" style="margin-top:11px">The white line is 100% of target. Targets come from your own wrist, ankle, knee and height — not from anyone else's photos. Hitting them all is a lifetime of work, not a year.</div></div>
+    <div class="tiny" style="margin-top:11px">The white line is 100% of the ${esc(phys().n)} target. Every target is scaled to your own wrist, ankle, knee and height — not to anyone else's photos. Sites marked "tracked" are recorded but not scored under this look. Hitting them all is a lifetime of work, not a year.</div></div>
   ${top.length?`<div class="sec"><h2>Where to put the work</h2><div class="rule"></div></div>
    <div class="card">
-     <p class="sub" style="margin:0 0 12px;font-size:13px">Furthest from target first. Pick up to two — each adds 3-4 sets a week on the days that have room in your 75 minutes.</p>
+     <p class="sub" style="margin:0 0 12px;font-size:13px">The areas ${esc(phys().n)} is built on come first, then whatever is furthest from target. Pick up to two — each adds sets a week on the days with room.</p>
      ${top.map(r=>{const pr=PRIO[r.g], on=prio.indexOf(r.g)>-1;
-       return `<div class="drow"><div class="dn">${esc(r.n)}<div class="tiny">${Math.round(r.score*100)}% of target${pr&&pr.d.length?` · adds to ${pr.d.map(k=>DAYS[k].n).join(" & ")}`:""}</div></div>
+       const days=pr?pr.d.filter(k=>Object.values(P.sched).indexOf(k)>-1):[];
+       return `<div class="drow"><div class="dn">${esc(r.n)}${r.core?` <span class="tiny" style="color:var(--blue)">core to ${esc(phys().n)}</span>`:""}
+         <div class="tiny">${Math.round(r.score*100)}% of target${days.length?` · adds to ${days.map(k=>DAYS[k].n).join(" & ")}`:""}</div></div>
        ${pr&&pr.d.length?`<button class="chip sm ${on?"on":""}" data-act="prio" data-v="${r.g}">${on?"On":"Add"}</button>`
          :`<span class="tiny" style="flex:0 0 auto;text-align:right;max-width:120px">Nutrition, not sets</span>`}</div>`;}).join("")}
      ${prio.length?`<div class="note b" style="margin:12px 0 0">Priority work is live on ${[...new Set(prio.flatMap(k=>PRIO[k].d))].map(k=>DAYS[k].n).join(", ")}. It shows up at the end of those sessions with a white bar.</div>`:""}
@@ -2055,6 +2153,7 @@ document.addEventListener("click",async ev=>{
     }
     UI.swapping=null; queue("p"); render(); return;
   }
+  if(a==="physique"){ P.physique=v; queue("p"); toast(`${PHYSIQUES[v].n} targets`); render(); return; }
   if(a==="sex"){ P.sex=v; queue("p"); render(); return; }
   if(a==="aller"){
     P.allergens=P.allergens||[];
